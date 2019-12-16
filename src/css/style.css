@@ -91,7 +91,8 @@ body {
 }
 
 #canvas svg path {
-
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 /*************** Info Panel ***************/
 
