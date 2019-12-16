@@ -14,6 +14,7 @@ module.exports = function (grunt) {
       mkDirs: "mkdir -p build/img build/css",
       copyHTML: "cp -f ./src/*.html build/",
       copyCSS: "cp -f ./src/css/*.css build/css/",
+      copyImg: "cp -f ./src/img/* build/img/",
       typedoc: "npx typedoc src/ts"
     },
 
@@ -72,7 +73,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask("copy-static-files",
     "Copy static files into the build directory.",
-    ["exec:mkDirs", "exec:copyHTML", "exec:copyCSS"]
+    ["exec:mkDirs", "exec:copyHTML", "exec:copyCSS", "exec:copyImg"]
   );
 
   /*grunt.registerTask("lint",
