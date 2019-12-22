@@ -5,6 +5,7 @@ export class FreeForm extends Shape {
     path: { x: number, y: number }[];
     pathSelection: d3.Selection<SVGPathElement, { x: number, y: number }[], any, any>;
     dPathAttribute: string;
+    
 
     constructor(x: number, y: number, canvas: Canvas) {
         super(x, y, canvas);
@@ -20,10 +21,11 @@ export class FreeForm extends Shape {
     addPoint(x: number, y: number): void {
         this.path.push({ x: x, y: y });
         this.dPathAttribute += `L${x},${y}`;
-        this.redraw();
+        
+        this.repaint();
     }
 
-    redraw(): void {
+    repaint(): void {
         this.pathSelection
             .attr("d", this.dPathAttribute)
             .style("fill", this.fill)

@@ -1,5 +1,6 @@
 import { ToolBar } from "./View/ToolBar/ToolBar";
 import { Canvas } from "./View/Canvas";
+import { InfoPanel } from "./View/InfoPanel/InfoPanel";
 
-new ToolBar();
-new Canvas();
+new Canvas(new ToolBar());
+new InfoPanel();

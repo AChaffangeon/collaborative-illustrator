@@ -1,20 +1,62 @@
-import { Shape } from "./Shapes/Shape";
 import * as d3 from "d3-selection";
-import { CanvasInteraction } from "./CanvasInteraction";
+import { ToolBar } from "./ToolBar/ToolBar";
+import { EventManager } from "../Events/EventManager";
+import { ColorChangedEvent } from "../Events/ColorChangedEvent";
+import { Shape } from "./Shapes/Shape";
 
 /** A class to create a canvas */
 export class Canvas {
+    toolBar: ToolBar;
     holderSelection: d3.Selection<any, any, any, any>;
     svgSelection: d3.Selection<SVGSVGElement, any, any, any>;
 
-    constructor() {
+    constructor(toolBar: ToolBar) {
         this.holderSelection = d3.select("#canvas");
         this.svgSelection = this.holderSelection.append("svg");
+        this.toolBar = toolBar;
 
         this.setupUI();
-        new CanvasInteraction(this);
+        this.setupPointerListeners();
+        this.setupShapePropretyChanged();
     }
 
-    setupUI(): void {
+    private setupUI(): void {
+    }
+
+    private setupPointerListeners(): void {
+        let canvasSVG = this.holderSelection.node();
+
+        canvasSVG.addEventListener("pointerdown", (e) => {
+            this.toolBar.getTool().pointerDown(e, this);
+        });
+
+        canvasSVG.addEventListener("pointermove", (e) => {
+            this.toolBar.getTool().pointerMove(e, this);
+        });
+
+        canvasSVG.addEventListener("pointerup", (e) => {
+            this.toolBar.getTool().pointerUp(e, this);
+        });
+
+        canvasSVG.addEventListener("pointercancel", (e) => {
+            this.toolBar.getTool().pointerCancel(e, this);
+
+        });
+        canvasSVG.addEventListener("pointerleave", (e) => {
+            this.toolBar.getTool().pointerLeave(e, this);
+        });
+    }
+
+    updateColor(colorChangedEvent: ColorChangedEvent): void {
+        let selectedShapes = Shape.getSelectedShapes();
+        selectedShapes.forEach((shape) => {
+            shape.setStroke(colorChangedEvent.color);
+        });
+    }
+
+    private setupShapePropretyChanged(): void {
+        EventManager.registerHandler("colorChanged", (e: ColorChangedEvent) => {
+            this.updateColor(e);
+        });
     }
 }

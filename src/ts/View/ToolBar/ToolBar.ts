@@ -1,11 +1,13 @@
 import * as d3 from "d3-selection";
 import { FreeFormTool } from "./Tools/FreeFormTool";
+import { Tool } from "./Tools/Tool";
+import { SelectTool } from "./Tools/SelectTool";
 
 export type ToolID = string;
 
 /** A class to create a toolbar */
 export class ToolBar {
-    selectedTool: ToolID;
+    selectedTool: Tool;
     holderSelection: d3.Selection<any, any, any, any>;
 
     constructor() {
@@ -15,6 +17,11 @@ export class ToolBar {
     }
 
     setupUI(): void {
-        new FreeFormTool(this);
+        this.selectedTool = new SelectTool(this, true);
+        new FreeFormTool(this, false);
+    }
+
+    getTool(): Tool {
+        return this.selectedTool;
     }
 }
