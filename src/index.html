@@ -21,6 +21,20 @@
     <div id="info-panel"></div>
 </body>
 
+<svg xmlns="http://www.w3.org/2000/svg" width="0px" height="0px">
+    <defs>
+        <filter id="red-outline" height="300%" width="300%" x="-75%" y="-75%">
+            <feMorphology operator="dilate" radius="2" in="SourceAlpha" result="thicken" />
+            <feFlood flood-color="rgb(255,120,120)" result="outlineColor" />
+            <feComposite in="outlineColor" in2="thicken" operator="in" result="softGlow_colored" />
+            <feMerge>
+                <feMergeNode in="softGlow_colored" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </defs>
+</svg>
+
 <script type="text/javascript" src="itm.js"></script>
 
 </html>
