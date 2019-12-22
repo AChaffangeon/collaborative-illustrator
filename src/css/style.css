@@ -10,7 +10,7 @@ html {
 body {
     display: grid;
     grid-template-columns: 80px auto 260px;
-    grid-template-rows: 60px auto;
+    grid-template-rows: 60px calc(100% - 60px);
     grid-template-areas:
         "menu menu menu"
         "toolbar canvas infopanel";
@@ -65,7 +65,8 @@ body {
     width: 70px;
     height: 70px;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 140px 70px;
+    background-position: 0px 0px;
     border: none;
     padding: 0;
     margin: 0;
@@ -73,8 +74,21 @@ body {
     margin-left: auto;
 }
 
+#toolbar button:focus {
+    outline:0;
+}
+
+
+#toolbar button.selected {
+    background-position: -70px 0;
+}
+
 #toolbar #freeform-button {
     background-image: url("../img/pen.svg");
+}
+
+#toolbar #select-button {
+    background-image: url("../img/select.svg");
 }
 
 /*************** Canvas ***************/
@@ -93,6 +107,14 @@ body {
 #canvas svg path {
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+#canvas .shape {
+    filter: none;
+}
+
+#canvas .shape.selected {
+    filter: url(#red-outline);
 }
 /*************** Info Panel ***************/
 
