@@ -19,7 +19,7 @@ export class EventManager {
      * @param eventHandler Handler to register.
      */
     static registerHandler(eventId: EventID, eventHandler: EventHandler<any>): void {
-        if (EventManager.eventHandlers.has(eventId)) {
+        if (!EventManager.eventHandlers.has(eventId)) {
             EventManager.eventHandlers.set(eventId, []);
         }
 
