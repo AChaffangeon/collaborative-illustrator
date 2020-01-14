@@ -22,7 +22,7 @@ export class FreeFormTool extends Tool {
         point = Helpers.pageToSVG(point, canvas.svgSelection);
 
         this.currentPoints = [point];
-        this.currentShape = canvas.svgSelection.append("path");
+        this.currentShape = canvas.svgSelection.append("path").classed("in-creation", true);
      }
 
     pointerMove(e: PointerEvent, canvas: Canvas): void {

@@ -116,6 +116,13 @@ body {
 #canvas .shape.selected {
     filter: url(#red-outline);
 }
+
+#canvas path.in-creation {
+    fill: none;
+    stroke: black;
+    stroke-width: 2px;
+}
+
 /*************** Info Panel ***************/
 
 #info-panel {
