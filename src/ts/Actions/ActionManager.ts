@@ -13,13 +13,16 @@ export class ActionManager {
     static UserId: string = `User_${Date.now() + Math.random()}`;
     canvas: Canvas;
     timeStamp: number;
-    actions: Action [];
+    doneActions: Action[];
+    undoneActions: Action[];
 
     constructor(canvas: Canvas) { 
         this.canvas = canvas;
         this.timeStamp = 0;
-        this.actions = [];
+        this.doneActions = [];
+        this.undoneActions = [];
         this.setupEventListeners();
+        this.setupCrtlZListeners();
     }
 
     do(action: Action): void {
@@ -32,6 +35,7 @@ export class ActionManager {
 
     manageActions(action: Action): void {
         console.log(action);
+        this.doneActions.push(action);
         this.do(action);
     }
 
@@ -42,6 +46,25 @@ export class ActionManager {
 
         EventManager.registerHandler("colorChanged", (e: ShapeCreatedEvent) => {
             this.manageActions(e.action);
+        });
+    }
+
+    setupCrtlZListeners(): void {
+        document.addEventListener('keypress', (e) => {
+            if (e.key === "z" && e.ctrlKey) {
+                let action = this.doneActions.pop();
+                if (action) {
+                    action.undo(this.canvas);
+                    this.undoneActions.push(action);
+                }
+            }
+            if (e.key === "Z" && e.ctrlKey && e.shiftKey) {
+                let action = this.undoneActions.pop();
+                if (action) {
+                    action.do(this.canvas);
+                    this.doneActions.push(action);
+                }
+            }
         });
     }
 }
