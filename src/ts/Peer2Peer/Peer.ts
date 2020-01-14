@@ -98,13 +98,15 @@ export class Peer {
             let msg = JSON.parse(event.data);
             if (msg) {
                 if (msg.id === "shapeCreated") {
+                    console.log(msg);
                     let shape = new FreeForm();
                     shape.addPoints(msg.data.path);
+                    shape.id = msg.data.id;
                     let e = new ShapeCreatedEvent(shape);
                     e.action.UserId = msg.userId;
                     EventManager.emit(e);
                 } else if (msg.id === "colorChanged") {
-                    let e = new ColorChangedEvent(msg.action.color);
+                    let e = new ColorChangedEvent(msg.action.color, msg.action.shapeId);
                     e.action.UserId = msg.action.userId;
                     EventManager.emit(e);
                 }

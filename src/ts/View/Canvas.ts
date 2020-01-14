@@ -11,11 +11,13 @@ export class Canvas {
     toolBar: ToolBar;
     holderSelection: d3.Selection<any, any, any, any>;
     svgSelection: d3.Selection<SVGSVGElement, any, any, any>;
+    shapes: Shape[];
 
     constructor(toolBar: ToolBar) {
         this.holderSelection = d3.select("#canvas");
         this.svgSelection = this.holderSelection.append("svg");
         this.toolBar = toolBar;
+        this.shapes = [];
 
         this.setupUI();
         this.setupPointerListeners();
@@ -48,10 +50,18 @@ export class Canvas {
         });
     }
 
-    updateColor(color: string): void {
-        let selectedShapes = Shape.getSelectedShapes();
-        selectedShapes.forEach((shape) => {
-            shape.setStroke(color);
+    getShape(shapeId: string): Shape {
+        let shape;
+        this.shapes.forEach((s) => {
+            if (s.id === shapeId) {
+                shape = s;
+            }
         });
+
+        if (shape === undefined) {
+            console.error("Shape not in canvas: " + shapeId);
+        }
+
+        return shape;
     }
 }

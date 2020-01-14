@@ -1,6 +1,7 @@
 import { InfoPanel } from "./InfoPanel";
 import { EventManager } from "../../Events/EventManager";
 import { ColorChangedEvent } from "../../Events/ColorChangedEvent";
+import { Shape } from "../Shapes/Shape";
 
 export class ColorPicker {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
@@ -20,7 +21,10 @@ export class ColorPicker {
     private setupInteraction(): void {
         this.holderSelection.select("input")
             .on("change", () => {
-                EventManager.emit(new ColorChangedEvent(this.getColor()));
+                let selectedShapes = Shape.getSelectedShapes();
+                selectedShapes.forEach((shape) => {
+                    EventManager.emit(new ColorChangedEvent(this.getColor(), shape.id));
+                });
             });
     }
 

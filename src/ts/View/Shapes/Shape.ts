@@ -27,6 +27,7 @@ export abstract class Shape {
     addToCanvas(canvas: Canvas): void {
         this.holderSelection = canvas.svgSelection.append("g").classed("shape", true);
         this.holderSelection.datum(this);
+        canvas.shapes.push(this);
     }
 
     translateTo(x: number, y: number): void { }
@@ -115,6 +116,7 @@ export abstract class Shape {
 
     toJSON(): any {
         let json = { };
+        json["id"] = this.id;
         json["stroke"] = this.stroke;
         json["strokeWidth"] = this.strokeWidth;
         json["fill"] = this.fill;
