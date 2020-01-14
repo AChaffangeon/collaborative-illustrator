@@ -28,7 +28,7 @@ body {
     box-sizing: border-box;
     grid-area: menu;
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: auto auto auto;
     grid-template-rows: auto;
     grid-template-areas:
         "title";
