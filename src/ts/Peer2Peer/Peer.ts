@@ -103,6 +103,10 @@ export class Peer {
                     let e = new ShapeCreatedEvent(shape);
                     e.action.UserId = msg.userId;
                     EventManager.emit(e);
+                } else if (msg.id === "colorChanged") {
+                    let e = new ColorChangedEvent(msg.action.color);
+                    e.action.UserId = msg.action.userId;
+                    EventManager.emit(e);
                 }
             }
         };
@@ -114,7 +118,6 @@ export class Peer {
 
     sendEvent(event: Event): void {
         if (event.action.UserId === ActionManager.UserId) {
-            console.log("Shape sent");
             this.send(JSON.stringify(event));
         }
     }
@@ -122,7 +125,6 @@ export class Peer {
     register(): void {
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
             if (event.action.UserId === ActionManager.UserId) {
-                console.log("Shape sent");
                 this.send(JSON.stringify({ id: event.id, userId: event.action.UserId, data: event.action.shape }));
             }
         });
