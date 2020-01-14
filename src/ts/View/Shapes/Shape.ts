@@ -30,6 +30,15 @@ export abstract class Shape {
         canvas.shapes.push(this);
     }
 
+    removeFromCanvas(canvas: Canvas): void {
+        this.holderSelection.remove();
+        this.holderSelection = undefined;
+
+        canvas.shapes = canvas.shapes.filter((value, index, arr) => {
+            return value !== this;
+        });
+    }
+
     translateTo(x: number, y: number): void { }
 
     translateBy(dx: number, dy: number): void { }
