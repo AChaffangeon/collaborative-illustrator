@@ -3,6 +3,8 @@ import { ToolBar } from "./ToolBar/ToolBar";
 import { EventManager } from "../Events/EventManager";
 import { ColorChangedEvent } from "../Events/ColorChangedEvent";
 import { Shape } from "./Shapes/Shape";
+import { FreeForm } from "./Shapes/FreeForm";
+import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
 
 /** A class to create a canvas */
 export class Canvas {
@@ -17,7 +19,6 @@ export class Canvas {
 
         this.setupUI();
         this.setupPointerListeners();
-        this.setupShapePropretyChanged();
     }
 
     private setupUI(): void {
@@ -47,16 +48,10 @@ export class Canvas {
         });
     }
 
-    updateColor(colorChangedEvent: ColorChangedEvent): void {
+    updateColor(color: string): void {
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            shape.setStroke(colorChangedEvent.color);
-        });
-    }
-
-    private setupShapePropretyChanged(): void {
-        EventManager.registerHandler("colorChanged", (e: ColorChangedEvent) => {
-            this.updateColor(e);
+            shape.setStroke(color);
         });
     }
 }

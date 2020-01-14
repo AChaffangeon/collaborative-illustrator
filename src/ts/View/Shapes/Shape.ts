@@ -9,40 +9,17 @@ export abstract class Shape {
     strokeWidth: number;
     fill: string;
 
-    constructor(x: number, y: number, canvas: Canvas) {
+    constructor() {
         this.stroke = "#000000";
         this.strokeWidth = 0;
         this.fill = "#ffffff";
 
+        this.holderSelection = undefined;
+    }
+
+    addToCanvas(canvas: Canvas): void {
         this.holderSelection = canvas.svgSelection.append("g").classed("shape", true);
         this.holderSelection.datum(this);
-    }
-
-    getStroke(): string {
-        return this.stroke;
-    }
-
-    getStrokeWidth(): number {
-        return this.strokeWidth;
-    }
-
-    getFill(): string {
-        return this.fill;
-    }
-
-    setStroke(color: string): void {
-        this.stroke = color;
-        this.repaint();
-    }
-
-    setStrokeWidth(width: number): void {
-        this.strokeWidth = width;
-        this.repaint();
-    }
-
-    setFill(color: string): void {
-        this.fill = color;
-        this.repaint();
     }
 
     translateTo(x: number, y: number): void { }
@@ -94,5 +71,46 @@ export abstract class Shape {
             selectedShapes.push(Shape.getShape(d3.select(this)));
         });
         return selectedShapes;
+    }
+
+    getStroke(): string {
+        return this.stroke;
+    }
+
+    getStrokeWidth(): number {
+        return this.strokeWidth;
+    }
+
+    getFill(): string {
+        return this.fill;
+    }
+
+    setStroke(color: string): void {
+        this.stroke = color;
+        this.repaint();
+    }
+
+    setStrokeWidth(width: number): void {
+        this.strokeWidth = width;
+        this.repaint();
+    }
+
+    setFill(color: string): void {
+        this.fill = color;
+        this.repaint();
+    }
+
+    copy(shape: any): void {
+        this.stroke = shape.stroke;
+        this.strokeWidth = shape.strokeWidth;
+        this.fill = shape.fill;
+    }
+
+    toJSON(): any {
+        let json = { };
+        json["stroke"] = this.stroke;
+        json["strokeWidth"] = this.strokeWidth;
+        json["fill"] = this.fill;
+        return json;
     }
 }

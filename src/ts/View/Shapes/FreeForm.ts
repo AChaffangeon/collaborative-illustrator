@@ -1,35 +1,59 @@
 import { Shape } from "./Shape";
 import { Canvas } from "../Canvas";
+import { Helpers, Point } from "../../helpers";
 
 export class FreeForm extends Shape {
-    path: { x: number, y: number }[];
-    pathSelection: d3.Selection<SVGPathElement, { x: number, y: number }[], any, any>;
-    dPathAttribute: string;
-    
+    path: Point[];
+    pathSelection: d3.Selection<SVGPathElement, Point[], any, any>;  
 
-    constructor(x: number, y: number, canvas: Canvas) {
-        super(x, y, canvas);
+    constructor() {
+        super();
 
-        this.path = [{ x: x, y: y }];
-        this.pathSelection = this.holderSelection.append("path");
-        this.dPathAttribute = `M${x},${y}`;
+        this.path = [];
 
         this.fill = "none";
         this.strokeWidth = 2;
     }
 
-    addPoint(x: number, y: number): void {
-        this.path.push({ x: x, y: y });
-        this.dPathAttribute += `L${x},${y}`;
-        
+    addPoint(pt: Point): void {
+        this.path.push(pt);
+        this.repaint();
+    }
+
+    addPoints(points: Point[]): void {
+        this.path = points;
+        this.repaint();
+    }
+
+    addToCanvas(canvas: Canvas): void {
+        super.addToCanvas(canvas);
+        this.pathSelection = this.holderSelection.append("path");
         this.repaint();
     }
 
     repaint(): void {
+        if (this.holderSelection === undefined) {
+            return;
+        }
+        if (this.path.length < 2) {
+            return;
+        }
+        
         this.pathSelection
-            .attr("d", this.dPathAttribute)
+            .attr("d", Helpers.pointsToDAttr(this.path))
             .style("fill", this.fill)
             .style("stroke", this.stroke)
             .style("stroke-width", `${this.strokeWidth}px`);
+    }
+
+    copy(shape: any): void {
+        super.copy(shape);
+        this.path = shape.path;
+    }
+
+    toJSON(): any {
+        let json = super.toJSON();
+        json["path"] = this.path;
+        return json;
     }
 }
