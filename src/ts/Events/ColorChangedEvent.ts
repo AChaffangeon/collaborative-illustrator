@@ -1,10 +1,11 @@
 import { Event } from "./EventManager";
+import { UpdateColorAction } from "../Actions/UpdateColorAction";
 
 export class ColorChangedEvent implements Event{
   id: string = "colorChanged";
-  color: string;
+  action: UpdateColorAction;
 
   constructor(color: string) {
-    this.color = color;
+    this.action = new UpdateColorAction(color);
   }
 }

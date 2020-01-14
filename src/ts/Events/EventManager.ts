@@ -1,8 +1,10 @@
+import { Action } from "../Actions/ActionManager";
+
 /** Id of a personalized Event. */
 export type EventID = string;
 
 /** Interface for personalized Events. */
-export interface Event { id: EventID; }
+export interface Event { id: EventID; action: Action; }
 
 /** Type for function that handles personalized Events. */
 export type EventHandler<E extends Event> = (e: Event) => void;
