@@ -10,7 +10,7 @@ export interface Action { UserId: ActionID; do: (canvas: Canvas) => void; undo: 
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
-    static UserId: string = `User-${Date.now() + Math.random()}`;
+    static UserId: string = `User_${Date.now() + Math.random()}`;
     canvas: Canvas;
     timeStamp: number;
     actions: Action [];

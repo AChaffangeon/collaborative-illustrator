@@ -1,15 +1,22 @@
 import { Canvas } from "../Canvas";
 import { Point, Helpers } from "../../helpers";
 import * as d3 from "d3-selection";
+import { ActionManager } from "../../Actions/ActionManager";
+
+let shapeNumber = 0;
 
 /** Abstract class for every shapes in the canvas. */
 export abstract class Shape {
+    id: string;
     holderSelection: d3.Selection<SVGGElement, any, any, any>;
     stroke: string;
     strokeWidth: number;
     fill: string;
 
     constructor() {
+        this.id = ActionManager.UserId + "-S_" + shapeNumber.toString();
+        shapeNumber += 1;
+
         this.stroke = "#000000";
         this.strokeWidth = 0;
         this.fill = "#ffffff";
