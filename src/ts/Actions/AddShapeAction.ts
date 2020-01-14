@@ -15,6 +15,6 @@ export class AddShapeAction implements Action {
     }
 
     undo(canvas: Canvas): void {
-
+        this.shape.removeFromCanvas(canvas);
     }
 }
