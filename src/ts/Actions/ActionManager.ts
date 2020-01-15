@@ -6,19 +6,18 @@ import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
 export type ActionID = string;
 
 /** Interface for Actions. */
-export interface Action { UserId: ActionID; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
+export interface Action { UserId: ActionID; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
     static UserId: string = `User_${Date.now() + Math.random()}`;
+    static timeStamp: number = 0;
     canvas: Canvas;
-    timeStamp: number;
     doneActions: Action[];
     undoneActions: Action[];
 
     constructor(canvas: Canvas) { 
         this.canvas = canvas;
-        this.timeStamp = 0;
         this.doneActions = [];
         this.undoneActions = [];
         this.setupEventListeners();
@@ -66,5 +65,11 @@ export class ActionManager {
                 }
             }
         });
+    }
+
+    static getTimeStamp(): number {
+        let t = ActionManager.timeStamp;
+        ActionManager.timeStamp += 1;
+        return t;
     }
 }

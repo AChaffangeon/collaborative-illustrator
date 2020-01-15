@@ -4,6 +4,7 @@ import { Canvas } from "../View/Canvas";
 
 export class AddShapeAction implements Action {
     UserId: string = ActionManager.UserId;
+    timeStamp: number = ActionManager.getTimeStamp();
     shape: Shape;
 
     constructor(shape: Shape) {

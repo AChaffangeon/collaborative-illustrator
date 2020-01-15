@@ -3,6 +3,7 @@ import { Canvas } from "../View/Canvas";
 
 export class UpdateColorAction implements Action {
     UserId: string =  ActionManager.UserId;
+    timeStamp: number = ActionManager.getTimeStamp();
     color: string;
     oldColor: string;
     shapeId: string;
