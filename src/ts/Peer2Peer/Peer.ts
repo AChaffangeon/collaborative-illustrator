@@ -4,6 +4,7 @@ import { ShapeCreatedEvent } from '../Events/ShapeCreatedEvent';
 import { ColorChangedEvent } from '../Events/ColorChangedEvent';
 import { FreeForm } from '../View/Shapes/FreeForm';
 import { ActionManager } from '../Actions/ActionManager';
+import { Socket } from 'dgram';
 
 const configuration = {
     iceServers: [{
@@ -17,31 +18,33 @@ export class Peer {
     signalingChannel: SignalingChannel;
     dataChannel: RTCDataChannel;
 
-    constructor(isOfferer: boolean = false) {
+    constructor(signalingChannel: SignalingChannel, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
-        this.signalingChannel = new SignalingChannel();
+        this.signalingChannel = signalingChannel;
         this.config(isOfferer);
     }
 
     config(isOfferer: boolean): void {
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
+                console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`)
                 this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate });
             }
         };
 
         if (isOfferer) {
             this.connection.onnegotiationneeded = () => {
+                console.log(`Create Local Description: ${this.signalingChannel.signalingChannel}`);
+
                 this.connection.createOffer().then((offer) => {
-                    this.setLocalDescirption(offer);
-                }).catch((e) => console.log(e));
+                    this.setLocalDescription(offer);
+                }).catch((e) => console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e));
             };
 
             this.dataChannel = this.connection.createDataChannel('chat');
             this.setupDataChannel();
         } else {
             this.connection.ondatachannel = (event) => {
-                console.log("data channel added");
                 this.dataChannel = event.channel;
                 this.setupDataChannel();
             };
@@ -50,18 +53,18 @@ export class Peer {
         this.listenToMsg();
     }
 
-    setLocalDescirption(description: RTCSessionDescriptionInit): void {
+    setLocalDescription(description: RTCSessionDescriptionInit): void {
         this.connection.setLocalDescription(description)
             .then(() => {
+                console.log(`[SENT] Local description TO: ${this.signalingChannel.signalingChannel}`)
                 this.signalingChannel.send({ id: "SDP", description: this.connection.localDescription });
             })
-            .catch((e) => console.log(e));
+            .catch((e) => console.log(`Error set local description with: ${this.signalingChannel.signalingChannel}: `, e));
     }
 
     listenToMsg(): void {
-        let socket = this.signalingChannel.socket;
-        socket.on("msg", (msg) => {
-            console.log("Received: ", msg);
+        let onMsg = (msg) => {
+            console.log(`[Received]: ${msg.id} FROM ${this.signalingChannel.signalingChannel}`);
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
@@ -69,28 +72,32 @@ export class Peer {
                     }
                     break;
 
-                case "SDP": // received a description for remote connection 
+                case "SDP": // received a description for remote connection
                     this.connection.setRemoteDescription(msg.description)
                         .then(() => {
                             if (this.connection.remoteDescription.type === "offer") {
                                 this.connection.createAnswer()
                                     .then((answer) => {
-                                        this.setLocalDescirption(answer);
-                                    });
+                                        this.setLocalDescription(answer);
+                                    })
+                                    .catch((e) => console.log("Error create answer: ", e));
                             }
-                        });
+                        })
+                        .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.signalingChannel.signalingChannel));
                     break;
             
                 default:
                     console.log("Unhandled MSG: ", msg);
                     break;
             }
-        });
+        };
+        this.signalingChannel.setOnMSG(onMsg);
     }
 
     setupDataChannel(): void {
         this.dataChannel.onopen = (event) => {
-            console.log("Datachannel is open!!!");
+            console.log(`Datachannel is open with: ${this.signalingChannel.signalingChannel}`);
+            this.signalingChannel.close();
             this.register();
         };
 
