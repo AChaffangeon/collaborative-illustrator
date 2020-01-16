@@ -9,7 +9,7 @@ export class PeerManager {
 
     constructor() {
         this.peers = [];
-        this.roomServer = new io('http://127.0.0.1:3000');
+        this.roomServer = new io('https://collaborative-illustrator.herokuapp.com/');
         this.setupServerListeners();
     }
 
