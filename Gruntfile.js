@@ -1,3 +1,5 @@
+var shell = require('shelljs');
+
 module.exports = function (grunt) {
 
   /***************************************************************************/
@@ -6,17 +8,6 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
-
-    // Command line tasks
-    // They allow to run external commands (as in a terminal).
-    exec: {
-      clean: "rm -Rf build .tscache",
-      mkDirs: "mkdir -p build/img build/css",
-      copyHTML: "cp -f ./src/*.html build/",
-      copyCSS: "cp -f ./src/css/*.css build/css/",
-      copyImg: "cp -f ./src/img/* build/img/",
-      typedoc: "npx typedoc src/ts"
-    },
 
     // Typescript task
     // It compiles each TypeScript souce file into a JavaScript file.
@@ -57,9 +48,7 @@ module.exports = function (grunt) {
   /* npm plugin loading
   /***************************************************************************/
 
-  grunt.loadNpmTasks("grunt-exec");
   grunt.loadNpmTasks("grunt-ts");
-  //grunt.loadNpmTasks("grunt-tslint");
   grunt.loadNpmTasks("grunt-browserify");
 
   /***************************************************************************/
@@ -73,13 +62,14 @@ module.exports = function (grunt) {
 
   grunt.registerTask("copy-static-files",
     "Copy static files into the build directory.",
-    ["exec:mkDirs", "exec:copyHTML", "exec:copyCSS", "exec:copyImg"]
+    function () {
+      shell.mkdir("-p", "build/img");
+      shell.mkdir("-p", "build/css");
+      shell.cp("-f", "./src/*.html", "build/");
+      shell.cp("-f", "./src/css/*.css", "build/css/");
+      shell.cp("-f", "./src/img/*", "build/img/");
+    }
   );
-
-  /*grunt.registerTask("lint",
-    "Check the style of the Typescript sources for the specified rules.",
-    ["tslint"]
-  );*/
 
   grunt.registerTask("compile",
     "Compile Typescript sources (using browserify) into the build directory.",
@@ -90,12 +80,6 @@ module.exports = function (grunt) {
     "Copy static files and compile Typescript sources into the build directory.",
     ["copy-static-files", "compile"]
   );
-
-  /*grunt.registerTask("make-doc",
-    "Generate the documentation of the Typescript sources in the docs directory.",
-    "exec:typedoc"
-  );*/
-
 
   grunt.registerTask("default", "build");
 };
