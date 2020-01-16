@@ -6,7 +6,7 @@ import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
 export type ActionID = string;
 
 /** Interface for Actions. */
-export interface Action { UserId: ActionID; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
+export interface Action { UserId: ActionID; ObjectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
