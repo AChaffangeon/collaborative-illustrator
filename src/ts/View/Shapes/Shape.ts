@@ -2,6 +2,7 @@ import { Canvas } from "../Canvas";
 import { Point, Helpers } from "../../helpers";
 import * as d3 from "d3-selection";
 import { ActionManager } from "../../Actions/ActionManager";
+import { Numeric } from "d3";
 
 let shapeNumber = 0;
 
@@ -12,6 +13,7 @@ export abstract class Shape {
     stroke: string;
     strokeWidth: number;
     fill: string;
+    translate: { dx: number; dy: number; };
 
     constructor() {
         this.id = ActionManager.userId + "-S_" + shapeNumber.toString();
@@ -20,6 +22,8 @@ export abstract class Shape {
         this.stroke = "#000000";
         this.strokeWidth = 0;
         this.fill = "#ffffff";
+
+        this.translate = { dx: 0, dy: 0 };
 
         this.holderSelection = undefined;
     }
@@ -39,12 +43,18 @@ export abstract class Shape {
         });
     }
 
-    translateTo(x: number, y: number): void { }
-
-    translateBy(dx: number, dy: number): void { }
+    translateBy(dx: number, dy: number): void {
+        this.translate.dx += dx;
+        this.translate.dy += dy;
+        this.repaint();
+     }
 
     repaint(): void {
-        console.log("wrong repaint");
+        if (this.holderSelection === undefined) {
+            return;
+        }
+        this.holderSelection
+            .attr("transform", `translate(${this.translate.dx}, ${this.translate.dy})`);
      }
 
     /**
@@ -54,7 +64,10 @@ export abstract class Shape {
      */
     isPicked(pt: Point): boolean {
         let bbox = this.holderSelection.node().getBBox();
-        return pt.x > bbox.x && pt.x < bbox.x + bbox.width && pt.y > bbox.y && pt.y < bbox.y + bbox.height;
+        return pt.x > bbox.x + this.translate.dx && 
+               pt.x < bbox.x + this.translate.dx + bbox.width && 
+               pt.y > bbox.y + this.translate.dy && 
+               pt.y < bbox.y + this.translate.dy + bbox.height;
     }
 
     select(): void {
@@ -102,6 +115,10 @@ export abstract class Shape {
         return this.fill;
     }
 
+    getTranslate(): { dx: number, dy: number} {
+        return this.translate;
+    }
+
     setStroke(color: string): void {
         this.stroke = color;
         this.repaint();
@@ -114,6 +131,11 @@ export abstract class Shape {
 
     setFill(color: string): void {
         this.fill = color;
+        this.repaint();
+    }
+
+    setTranslate(translate: { dx: number, dy: number}): void {
+        this.translate = translate;
         this.repaint();
     }
 

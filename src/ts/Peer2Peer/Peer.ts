@@ -6,6 +6,7 @@ import { ActionManager } from '../Actions/ActionManager';
 import { StrokeChangedEvent } from '../Events/StrokeChangedEvent';
 import { StrokeWidthChangedEvent } from '../Events/StrokeWidthChangedEvent';
 import { FillChangedEvent } from '../Events/FillChangedEvent';
+import { TranslateShapeEvent } from '../Events/TranslateShapeEvent';
 
 const configuration = {
     iceServers: [{
@@ -126,6 +127,10 @@ export class Peer {
                     let e = new FillChangedEvent(msg.action.color, msg.action.objectId);
                     e.action.userId = msg.action.userId;
                     EventManager.emit(e);
+                } else if (msg.id === "translateShape") {
+                    let e = new TranslateShapeEvent(msg.action.translate, msg.action.objectId);
+                    e.action.userId = msg.action.userId;
+                    EventManager.emit(e);
                 }
             }
         };
@@ -157,6 +162,10 @@ export class Peer {
         });
 
         EventManager.registerHandler("fillChanged", (event: FillChangedEvent) => {
+            this.sendEvent(event);
+        });
+
+        EventManager.registerHandler("translateShape", (event: TranslateShapeEvent) => {
             this.sendEvent(event);
         });
     }

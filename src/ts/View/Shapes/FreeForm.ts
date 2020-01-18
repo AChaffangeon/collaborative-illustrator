@@ -32,6 +32,7 @@ export class FreeForm extends Shape {
     }
 
     repaint(): void {
+        super.repaint();
         if (this.holderSelection === undefined) {
             return;
         }

@@ -4,6 +4,7 @@ import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
 import { StrokeChangedEvent } from "../Events/StrokeChangedEvent";
 import { StrokeWidthChangedEvent } from "../Events/StrokeWidthChangedEvent";
 import { FillChangedEvent } from "../Events/FillChangedEvent";
+import { TranslateShapeEvent } from "../Events/TranslateShapeEvent";
 
 /** Id of an Action. */
 export type ActionID = string;
@@ -55,6 +56,10 @@ export class ActionManager {
         });
 
         EventManager.registerHandler("fillChanged", (e: FillChangedEvent) => {
+            this.manageActions(e.action);
+        });
+
+        EventManager.registerHandler("translateShape", (e: TranslateShapeEvent) => {
             this.manageActions(e.action);
         });
     }

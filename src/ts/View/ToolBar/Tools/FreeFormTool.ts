@@ -26,10 +26,10 @@ export class FreeFormTool extends Tool {
      }
 
     pointerMove(e: PointerEvent, canvas: Canvas): void {
-        super.pointerMove(e, canvas);
         if (!this.isDown) {
             return;
         }
+        super.pointerMove(e, canvas);
         let point = { x: e.pageX, y: e.pageY };
         point = Helpers.pageToSVG(point, canvas.svgSelection);
 
@@ -41,7 +41,7 @@ export class FreeFormTool extends Tool {
         if (!this.isDown) {
             return;
         }
-        this.isDown = false;
+        super.pointerUp(e, canvas);
 
         let shape = new FreeForm();
         shape.addPoints(this.currentPoints);
@@ -53,14 +53,13 @@ export class FreeFormTool extends Tool {
     }
 
     pointerCancel(e: PointerEvent, canvas: Canvas): void { 
-        super.pointerCancel(e, canvas);
         if (!this.isDown) {
             return;
         }
+        super.pointerCancel(e, canvas);
     }
 
     pointerLeave(e: PointerEvent, canvas: Canvas): void { 
-        super.pointerLeave(e, canvas);
         if (!this.isDown) {
             return;
         }
