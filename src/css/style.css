@@ -172,3 +172,46 @@ body {
     background-color: white;
     border-radius: 5px;
 }
+
+
+/** Pickers **/
+.picker {
+    background-color: #3F4147;
+    padding-bottom: 4px;
+    min-height: 64px;
+}
+
+.picker .header {
+    background-color: #2F3133;
+    color: white;
+    font-size: 20px;
+    margin-bottom: 6px;
+    padding: 4px;
+}
+
+#stroke-picker input {
+    margin-left: 9px;
+}
+
+#stroke-picker input[type="text"] {
+  width: 20px;
+}
+
+#stroke-picker label {
+    margin-left: 2px;
+    color: white;
+}
+
+#fill-picker {
+    position: relative;
+}
+
+#fill-picker select {
+    position: absolute;
+    left: 14px;
+}
+
+#fill-picker input {
+    position: absolute;
+    right: 14px;
+}

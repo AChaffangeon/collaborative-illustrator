@@ -1,16 +1,19 @@
 import { Canvas } from "../View/Canvas";
 import { EventManager } from "../Events/EventManager";
 import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
+import { StrokeChangedEvent } from "../Events/StrokeChangedEvent";
+import { StrokeWidthChangedEvent } from "../Events/StrokeWidthChangedEvent";
+import { FillChangedEvent } from "../Events/FillChangedEvent";
 
 /** Id of an Action. */
 export type ActionID = string;
 
 /** Interface for Actions. */
-export interface Action { UserId: ActionID; ObjectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
+export interface Action { userId: ActionID; objectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
-    static UserId: string = `User_${Date.now() + Math.random()}`;
+    static userId: string = `User_${Date.now() + Math.random()}`;
     static timeStamp: number = 0;
     canvas: Canvas;
     doneActions: Action[];
@@ -43,7 +46,15 @@ export class ActionManager {
             this.manageActions(e.action);
         });
 
-        EventManager.registerHandler("colorChanged", (e: ShapeCreatedEvent) => {
+        EventManager.registerHandler("strokeChanged", (e: StrokeChangedEvent) => {
+            this.manageActions(e.action);
+        });
+
+        EventManager.registerHandler("strokeWidthChanged", (e: StrokeWidthChangedEvent) => {
+            this.manageActions(e.action);
+        });
+
+        EventManager.registerHandler("fillChanged", (e: FillChangedEvent) => {
             this.manageActions(e.action);
         });
     }

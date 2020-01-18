@@ -1,32 +1,30 @@
 import { ActionManager, Action } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
-export class UpdateColorAction implements Action {
-    ObjectId: string;
-    UserId: string =  ActionManager.UserId;
+export class UpdateFillAction implements Action {
+    objectId: string;
+    userId: string =  ActionManager.userId;
     timeStamp: number = ActionManager.getTimeStamp();
     color: string;
     oldColor: string;
-    shapeId: string;
 
     constructor(color: string, shapeId: string) {
         this.color = color;
-        this.shapeId = shapeId;
-        this.ObjectId = shapeId;
+        this.objectId = shapeId;
     }
 
     do(canvas: Canvas): void {
-        let shape = canvas.getShape(this.shapeId);
+        let shape = canvas.getShape(this.objectId);
         if ( this.oldColor === undefined ) {
-            this.oldColor = shape.getStroke();
+            this.oldColor = shape.getFill();
         }
-        shape.setStroke(this.color);
+        shape.setFill(this.color);
     }
 
     undo(canvas: Canvas): void {
         if (this.oldColor !== undefined) {
-            let shape = canvas.getShape(this.shapeId);
-            shape.setStroke(this.oldColor);
+            let shape = canvas.getShape(this.objectId);
+            shape.setFill(this.oldColor);
         }
     }
 }

@@ -14,7 +14,7 @@ export abstract class Shape {
     fill: string;
 
     constructor() {
-        this.id = ActionManager.UserId + "-S_" + shapeNumber.toString();
+        this.id = ActionManager.userId + "-S_" + shapeNumber.toString();
         shapeNumber += 1;
 
         this.stroke = "#000000";

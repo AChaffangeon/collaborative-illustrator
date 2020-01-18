@@ -1,10 +1,6 @@
 import * as d3 from "d3-selection";
 import { ToolBar } from "./ToolBar/ToolBar";
-import { EventManager } from "../Events/EventManager";
-import { ColorChangedEvent } from "../Events/ColorChangedEvent";
 import { Shape } from "./Shapes/Shape";
-import { FreeForm } from "./Shapes/FreeForm";
-import { ShapeCreatedEvent } from "../Events/ShapeCreatedEvent";
 
 /** A class to create a canvas */
 export class Canvas {

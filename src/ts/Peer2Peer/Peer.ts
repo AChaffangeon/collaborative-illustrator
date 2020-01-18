@@ -1,10 +1,11 @@
 import { SignalingChannel } from './SignalingChannel';
 import { EventManager, Event } from '../Events/EventManager';
 import { ShapeCreatedEvent } from '../Events/ShapeCreatedEvent';
-import { ColorChangedEvent } from '../Events/ColorChangedEvent';
 import { FreeForm } from '../View/Shapes/FreeForm';
 import { ActionManager } from '../Actions/ActionManager';
-import { Socket } from 'dgram';
+import { StrokeChangedEvent } from '../Events/StrokeChangedEvent';
+import { StrokeWidthChangedEvent } from '../Events/StrokeWidthChangedEvent';
+import { FillChangedEvent } from '../Events/FillChangedEvent';
 
 const configuration = {
     iceServers: [{
@@ -104,17 +105,26 @@ export class Peer {
         this.dataChannel.onmessage = (event) => {
             let msg = JSON.parse(event.data);
             if (msg) {
+                console.log(msg);
                 if (msg.id === "shapeCreated") {
                     console.log(msg);
                     let shape = new FreeForm();
                     shape.addPoints(msg.data.path);
                     shape.id = msg.data.id;
                     let e = new ShapeCreatedEvent(shape);
-                    e.action.UserId = msg.userId;
+                    e.action.userId = msg.userId;
                     EventManager.emit(e);
-                } else if (msg.id === "colorChanged") {
-                    let e = new ColorChangedEvent(msg.action.color, msg.action.shapeId);
-                    e.action.UserId = msg.action.userId;
+                } else if (msg.id === "strokeChanged") {
+                    let e = new StrokeChangedEvent(msg.action.color, msg.action.objectId);
+                    e.action.userId = msg.action.userId;
+                    EventManager.emit(e);
+                } else if (msg.id === "strokeWidthChanged") {
+                    let e = new StrokeWidthChangedEvent(msg.action.width, msg.action.objectId);
+                    e.action.userId = msg.action.userId;
+                    EventManager.emit(e);
+                } else if (msg.id === "fillChanged") {
+                    let e = new FillChangedEvent(msg.action.color, msg.action.objectId);
+                    e.action.userId = msg.action.userId;
                     EventManager.emit(e);
                 }
             }
@@ -126,19 +136,27 @@ export class Peer {
     }
 
     sendEvent(event: Event): void {
-        if (event.action.UserId === ActionManager.UserId) {
+        if (event.action.userId === ActionManager.userId) {
             this.send(JSON.stringify(event));
         }
     }
 
     register(): void {
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
-            if (event.action.UserId === ActionManager.UserId) {
-                this.send(JSON.stringify({ id: event.id, userId: event.action.UserId, data: event.action.shape }));
+            if (event.action.userId === ActionManager.userId) {
+                this.send(JSON.stringify({ id: event.id, userId: event.action.userId, data: event.action.shape }));
             }
         });
 
-        EventManager.registerHandler("colorChanged", (event: ColorChangedEvent) => {
+        EventManager.registerHandler("strokeChanged", (event: StrokeChangedEvent) => {
+            this.sendEvent(event);
+        });
+
+        EventManager.registerHandler("strokeWidthChanged", (event: StrokeWidthChangedEvent) => {
+            this.sendEvent(event);
+        });
+
+        EventManager.registerHandler("fillChanged", (event: FillChangedEvent) => {
             this.sendEvent(event);
         });
     }
