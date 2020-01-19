@@ -3,14 +3,16 @@ import { Canvas } from "../View/Canvas";
 
 export class UpdateStrokeAction implements Action {
     objectId: string;
-    userId: string =  ActionManager.userId;
-    timeStamp: number = ActionManager.getTimeStamp();
+    userId: string;
+    timeStamp: number;
     color: string;
     oldColor: string;
 
-    constructor(color: string, shapeId: string) {
+    constructor(color: string, shapeId: string, userId: string, timeStamp: number) {
         this.color = color;
         this.objectId = shapeId;
+        this.userId = userId;
+        this.timeStamp = timeStamp;
     }
 
     do(canvas: Canvas): void {

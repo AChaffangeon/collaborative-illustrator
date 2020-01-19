@@ -5,7 +5,7 @@ export class StrokeWidthChangedEvent implements Event{
     id: string = "strokeWidthChanged";
     action: UpdateStrokeWidthAction;
 
-    constructor(width: number, shapeId: string) {
-        this.action = new UpdateStrokeWidthAction(width, shapeId);
+    constructor(width: number, shapeId: string, userId: string, timeStamp: number) {
+        this.action = new UpdateStrokeWidthAction(width, shapeId, userId, timeStamp);
     }
 }

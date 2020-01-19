@@ -2,6 +2,7 @@ import { InfoPanel } from "./InfoPanel";
 import { EventManager } from "../../Events/EventManager";
 import { Shape } from "../Shapes/Shape";
 import { FillChangedEvent } from "../../Events/FillChangedEvent";
+import { ActionManager } from "../../Actions/ActionManager";
 
 export class FillPicker {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
@@ -76,7 +77,7 @@ export class FillPicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new FillChangedEvent(color, shape.id));
+            EventManager.emit(new FillChangedEvent(color, shape.id, ActionManager.userId, ActionManager.timeStamp));
         });
     }
 

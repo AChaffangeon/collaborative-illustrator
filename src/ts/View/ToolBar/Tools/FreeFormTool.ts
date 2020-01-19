@@ -5,6 +5,7 @@ import { FreeForm } from "../../Shapes/FreeForm";
 import { Helpers, Point } from "../../../helpers";
 import { EventManager } from "../../../Events/EventManager";
 import { ShapeCreatedEvent } from "../../../Events/ShapeCreatedEvent";
+import { ActionManager } from "../../../Actions/ActionManager";
 
 export class FreeFormTool extends Tool {
     id: string = "freeform";
@@ -45,7 +46,7 @@ export class FreeFormTool extends Tool {
 
         let shape = new FreeForm();
         shape.addPoints(this.currentPoints);
-        EventManager.emit(new ShapeCreatedEvent(shape));
+        EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.timeStamp));
 
         this.currentPoints = undefined;
         this.currentShape.remove();

@@ -6,7 +6,7 @@ export class ShapeCreatedEvent implements Event {
     id: string = "shapeCreated";
     action: AddShapeAction;
 
-    constructor(shape: Shape) {
-        this.action = new AddShapeAction(shape);
+    constructor(shape: Shape, userId: string, timeStamp: number) {
+        this.action = new AddShapeAction(shape, userId, timeStamp);
     }
 }

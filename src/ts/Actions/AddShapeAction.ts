@@ -4,12 +4,14 @@ import { Canvas } from "../View/Canvas";
 
 export class AddShapeAction implements Action {
     objectId: string = ActionManager.userId + "-Canvas";
-    userId: string = ActionManager.userId;
-    timeStamp: number = ActionManager.getTimeStamp();
+    userId: string;
+    timeStamp: number;
     shape: Shape;
 
-    constructor(shape: Shape) {
+    constructor(shape: Shape, userId: string, timeStamp: number) {
         this.shape = shape;
+        this.userId = userId;
+        this.timeStamp = timeStamp;
     }
 
     do(canvas: Canvas): void {

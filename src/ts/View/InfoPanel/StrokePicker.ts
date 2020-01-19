@@ -3,6 +3,7 @@ import { EventManager } from "../../Events/EventManager";
 import { Shape } from "../Shapes/Shape";
 import { StrokeChangedEvent } from "../../Events/StrokeChangedEvent";
 import { StrokeWidthChangedEvent } from "../../Events/StrokeWidthChangedEvent";
+import { ActionManager } from "../../Actions/ActionManager";
 
 export class StrokePicker {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
@@ -75,7 +76,7 @@ export class StrokePicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new StrokeChangedEvent(this.getStroke(), shape.id));
+            EventManager.emit(new StrokeChangedEvent(this.getStroke(), shape.id, ActionManager.userId, ActionManager.timeStamp));
         });
     }
 
@@ -87,7 +88,7 @@ export class StrokePicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new StrokeWidthChangedEvent(width, shape.id));
+            EventManager.emit(new StrokeWidthChangedEvent(width, shape.id, ActionManager.userId, ActionManager.timeStamp));
         });
     }
 

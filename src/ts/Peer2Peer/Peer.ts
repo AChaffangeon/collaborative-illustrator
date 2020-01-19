@@ -112,24 +112,19 @@ export class Peer {
                     let shape = new FreeForm();
                     shape.addPoints(msg.data.path);
                     shape.id = msg.data.id;
-                    let e = new ShapeCreatedEvent(shape);
-                    e.action.userId = msg.userId;
+                    let e = new ShapeCreatedEvent(shape, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "strokeChanged") {
-                    let e = new StrokeChangedEvent(msg.action.color, msg.action.objectId);
-                    e.action.userId = msg.action.userId;
+                    let e = new StrokeChangedEvent(msg.action.color, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "strokeWidthChanged") {
-                    let e = new StrokeWidthChangedEvent(msg.action.width, msg.action.objectId);
-                    e.action.userId = msg.action.userId;
+                    let e = new StrokeWidthChangedEvent(msg.action.width, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "fillChanged") {
-                    let e = new FillChangedEvent(msg.action.color, msg.action.objectId);
-                    e.action.userId = msg.action.userId;
+                    let e = new FillChangedEvent(msg.action.color, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "translateShape") {
-                    let e = new TranslateShapeEvent(msg.action.translate, msg.action.objectId);
-                    e.action.userId = msg.action.userId;
+                    let e = new TranslateShapeEvent(msg.action.translate, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 }
             }

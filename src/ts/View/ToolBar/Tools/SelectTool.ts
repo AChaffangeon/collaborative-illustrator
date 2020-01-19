@@ -6,6 +6,7 @@ import { Shape } from "../../Shapes/Shape";
 import { Helpers } from "../../../helpers";
 import { EventManager } from "../../../Events/EventManager";
 import { TranslateShapeEvent } from "../../../Events/TranslateShapeEvent";
+import { ActionManager } from "../../../Actions/ActionManager";
 
 export class SelectTool extends Tool {
     id: string = "select";
@@ -86,11 +87,13 @@ export class SelectTool extends Tool {
         if (this.moved) {
             let translate = this.shape.getTranslate();
 
-            EventManager.emit(new TranslateShapeEvent(translate, this.shape.id));
+            let userId = ActionManager.userId;
+            let timeStamp = ActionManager.timeStamp;
+            EventManager.emit(new TranslateShapeEvent(translate, this.shape.id, userId, timeStamp));
 
             this.selectedShapes.forEach((s) => {
                 if (s !== this.shape) {
-                    EventManager.emit(new TranslateShapeEvent(translate, s.id));
+                    EventManager.emit(new TranslateShapeEvent(translate, s.id, userId, timeStamp));
                 }
             });
         } else {

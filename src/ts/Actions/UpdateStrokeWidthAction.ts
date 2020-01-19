@@ -3,14 +3,16 @@ import { Canvas } from "../View/Canvas";
 
 export class UpdateStrokeWidthAction implements Action {
     objectId: string;
-    userId: string =  ActionManager.userId;
-    timeStamp: number = ActionManager.getTimeStamp();
+    userId: string;
+    timeStamp: number;
     width: number;
     oldWidth: number;
 
-    constructor(width: number, shapeId: string) {
+    constructor(width: number, shapeId: string, userId: string, timeStamp: number) {
         this.width = width;
         this.objectId = shapeId;
+        this.userId = userId;
+        this.timeStamp = timeStamp;
     }
 
     do(canvas: Canvas): void {
