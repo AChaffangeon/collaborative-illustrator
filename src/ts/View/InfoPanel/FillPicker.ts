@@ -77,7 +77,7 @@ export class FillPicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new FillChangedEvent(color, shape.id, ActionManager.userId, ActionManager.timeStamp));
+            EventManager.emit(new FillChangedEvent(color, shape.id, ActionManager.userId, ActionManager.getTimeStamp()));
         });
     }
 

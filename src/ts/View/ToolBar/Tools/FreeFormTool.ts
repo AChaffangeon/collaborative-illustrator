@@ -46,7 +46,7 @@ export class FreeFormTool extends Tool {
 
         let shape = new FreeForm();
         shape.addPoints(this.currentPoints);
-        EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.timeStamp));
+        EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.getTimeStamp()));
 
         this.currentPoints = undefined;
         this.currentShape.remove();

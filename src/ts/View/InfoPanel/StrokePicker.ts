@@ -76,7 +76,7 @@ export class StrokePicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new StrokeChangedEvent(this.getStroke(), shape.id, ActionManager.userId, ActionManager.timeStamp));
+            EventManager.emit(new StrokeChangedEvent(this.getStroke(), shape.id, ActionManager.userId, ActionManager.getTimeStamp()));
         });
     }
 
@@ -88,7 +88,7 @@ export class StrokePicker {
 
         let selectedShapes = Shape.getSelectedShapes();
         selectedShapes.forEach((shape) => {
-            EventManager.emit(new StrokeWidthChangedEvent(width, shape.id, ActionManager.userId, ActionManager.timeStamp));
+            EventManager.emit(new StrokeWidthChangedEvent(width, shape.id, ActionManager.userId, ActionManager.getTimeStamp()));
         });
     }
 

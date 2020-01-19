@@ -86,9 +86,9 @@ export class SelectTool extends Tool {
 
         if (this.moved) {
             let translate = this.shape.getTranslate();
-
+            
             let userId = ActionManager.userId;
-            let timeStamp = ActionManager.timeStamp;
+            let timeStamp = ActionManager.getTimeStamp();
             EventManager.emit(new TranslateShapeEvent(translate, this.shape.id, userId, timeStamp));
 
             this.selectedShapes.forEach((s) => {
