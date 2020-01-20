@@ -17,6 +17,7 @@ export class AddShapeAction implements Action {
     }
 
     do(canvas: Canvas): void {
+        //ActionManager.createdShapes.push(this.objectId);
         this.shape.addToCanvas(canvas);
     }
 

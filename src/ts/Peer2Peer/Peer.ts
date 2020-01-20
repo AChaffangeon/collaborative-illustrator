@@ -105,7 +105,7 @@ export class Peer {
 
         this.dataChannel.onmessage = (event) => {
             //console.log(ActionManager.timeStamp);
-            ActionManager.timeStamp += 1;
+            //ActionManager.timeStamp += 1;
             //console.log(ActionManager.timeStamp);
             let msg = JSON.parse(event.data);
             if (msg) {

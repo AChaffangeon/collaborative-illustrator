@@ -20,11 +20,14 @@ export class ActionManager {
     canvas: Canvas;
     doneActions: Action[];
     undoneActions: Action[];
+    queueActions: Action[];
+    static createdShapes: string[] = [];
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.doneActions = [];
         this.undoneActions = [];
+        this.queueActions = [];
         this.setupEventListeners();
         this.setupCrtlZListeners();
     }
@@ -37,57 +40,77 @@ export class ActionManager {
         action.undo(this.canvas);
     }
 
-    getHigherId(a, b) {
-      let aNum = parseFloat(a.userId.replace(/[^0-9]/g, ""));
-      let bNum = parseFloat(b.userId.replace(/[^0-9]/g, ""));
+    rankActions(a, b) {
 
-      console.log(aNum, bNum);
-      if ( aNum < bNum ){
+      let uIdNumA = parseFloat(a.userId.replace(/[^0-9]/g, ""));
+      let uIdNumB = parseFloat(b.userId.replace(/[^0-9]/g, ""));
+
+      if(a.timeStamp < b.timeStamp){
         return -1;
-      }
-      else if(aNum === bNum) {
-        if(a.timeStamp < b.timeStamp){
-          return -1;
-        }else{
-          return 1
-        }
+      }else if (a.timeStamp === b.timeStamp && uIdNumA < uIdNumB){
+        return -1;
       }else{
         return 1;
       }
-      return 0;
     }
 
     manageActions(action: Action): void {
-        console.log("action", action);
+        //console.log("action", action);
 
-        if(action.timeStamp != ActionManager.timeStamp){
-          let concurrentActions = [];
-          for ( let a of this.doneActions){
-            if(a.type === action.type && a.objectId === action.objectId){
-              concurrentActions.push(a);
+        /**if(!createdShapes.includes(action.objectId)){
+          if(action.type === "addShape"){
+            this.doneActions.push(action);
+            this.do(action);
+
+            for(let a of queueActions){
+                if(a.objectId === action.objectId){
+                  this.doneActions.push(a);
+                  this.do(a);
+                  queueActions.splice(queueActions.indexOf(a), 1);
+                }
             }
 
-            for(let a of concurrentActions){
-              this.undo(a);
-            }
-
-            concurrentActions.push(action);
-            concurrentActions.sort(this.getHigherId);
-            console.log(concurrentActions);
-
-            for(let a of concurrentActions){
-              this.do(a);
-            }
-
+          }else{
+            this.queueActions.push(action);
           }
+        }else **/if(action.timeStamp != ActionManager.timeStamp){
+          this.promote(action);
 
         }else{
           this.doneActions.push(action);
           this.do(action);
         }
 
-
+        this.update(action);
     }
+
+    promote(action: Action): void {
+
+      let concurrentActions = [];
+
+      for ( let a of this.doneActions){
+        if(this.rankActions(action,a) < 0 && action.type === a.type){
+          concurrentActions.push(a);
+        }
+      }
+
+      concurrentActions.reverse();
+      for(let a of concurrentActions){
+        this.undo(a);
+      }
+
+      this.doneActions.push(action);
+      this.do(action);
+
+      concurrentActions.reverse();
+      for(let a of concurrentActions){
+        this.do(a);
+      }
+    }
+
+    update(action: Action): void {
+        ActionManager.timeStamp = Math.max(ActionManager.timeStamp,action.timeStamp);
+     }
 
     setupEventListeners(): void {
         EventManager.registerHandler("shapeCreated", (e: ShapeCreatedEvent) => {
