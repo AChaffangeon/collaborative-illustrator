@@ -2,6 +2,7 @@ import { ActionManager, Action } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
 export class UpdateStrokeAction implements Action {
+    type: string;
     objectId: string;
     userId: string;
     timeStamp: number;
@@ -9,6 +10,7 @@ export class UpdateStrokeAction implements Action {
     oldColor: string;
 
     constructor(color: string, shapeId: string, userId: string, timeStamp: number) {
+        this.type = "updateStroke";
         this.color = color;
         this.objectId = shapeId;
         this.userId = userId;

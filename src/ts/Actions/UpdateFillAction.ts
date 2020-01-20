@@ -2,6 +2,7 @@ import { ActionManager, Action } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
 export class UpdateFillAction implements Action {
+    type: string;
     objectId: string;
     userId: string ;
     timeStamp: number;
@@ -9,6 +10,7 @@ export class UpdateFillAction implements Action {
     oldColor: string;
 
     constructor(color: string, shapeId: string, userId: string, timeStamp: number) {
+        this.type = "updateFill";
         this.color = color;
         this.objectId = shapeId;
         this.userId = userId;

@@ -87,7 +87,7 @@ export class Peer {
                         })
                         .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.signalingChannel.signalingChannel));
                     break;
-            
+
                 default:
                     console.log("Unhandled MSG: ", msg);
                     break;
@@ -104,11 +104,14 @@ export class Peer {
         };
 
         this.dataChannel.onmessage = (event) => {
+            //console.log(ActionManager.timeStamp);
+            ActionManager.timeStamp += 1;
+            //console.log(ActionManager.timeStamp);
             let msg = JSON.parse(event.data);
             if (msg) {
-                console.log(msg);
+                //console.log(msg);
                 if (msg.id === "shapeCreated") {
-                    console.log(msg);
+                    //console.log(msg);
                     let shape = new FreeForm();
                     shape.addPoints(msg.data.path);
                     shape.id = msg.data.id;
@@ -132,7 +135,11 @@ export class Peer {
     }
 
     send(msg: string): void {
-        this.dataChannel.send(msg);
+        setTimeout(function(){
+
+          this.dataChannel.send(msg);
+
+        }.bind(this), 10000);
     }
 
     sendEvent(event: Event): void {

@@ -10,17 +10,18 @@ import { TranslateShapeEvent } from "../Events/TranslateShapeEvent";
 export type ActionID = string;
 
 /** Interface for Actions. */
-export interface Action { userId: ActionID; objectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
+export interface Action {type: string; userId: ActionID; objectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
+
     static userId: string = `User_${Date.now() + Math.random()}`;
     static timeStamp: number = 0;
     canvas: Canvas;
     doneActions: Action[];
     undoneActions: Action[];
 
-    constructor(canvas: Canvas) { 
+    constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.doneActions = [];
         this.undoneActions = [];
@@ -36,10 +37,56 @@ export class ActionManager {
         action.undo(this.canvas);
     }
 
+    getHigherId(a, b) {
+      let aNum = parseFloat(a.userId.replace(/[^0-9]/g, ""));
+      let bNum = parseFloat(b.userId.replace(/[^0-9]/g, ""));
+
+      console.log(aNum, bNum);
+      if ( aNum < bNum ){
+        return -1;
+      }
+      else if(aNum === bNum) {
+        if(a.timeStamp < b.timeStamp){
+          return -1;
+        }else{
+          return 1
+        }
+      }else{
+        return 1;
+      }
+      return 0;
+    }
+
     manageActions(action: Action): void {
-        console.log(action);
-        this.doneActions.push(action);
-        this.do(action);
+        console.log("action", action);
+
+        if(action.timeStamp != ActionManager.timeStamp){
+          let concurrentActions = [];
+          for ( let a of this.doneActions){
+            if(a.type === action.type && a.objectId === action.objectId){
+              concurrentActions.push(a);
+            }
+
+            for(let a of concurrentActions){
+              this.undo(a);
+            }
+
+            concurrentActions.push(action);
+            concurrentActions.sort(this.getHigherId);
+            console.log(concurrentActions);
+
+            for(let a of concurrentActions){
+              this.do(a);
+            }
+
+          }
+
+        }else{
+          this.doneActions.push(action);
+          this.do(action);
+        }
+
+
     }
 
     setupEventListeners(): void {
@@ -84,8 +131,9 @@ export class ActionManager {
     }
 
     static getTimeStamp(): number {
-        let t = ActionManager.timeStamp;
         ActionManager.timeStamp += 1;
+        let t = ActionManager.timeStamp;
+
         return t;
     }
 }

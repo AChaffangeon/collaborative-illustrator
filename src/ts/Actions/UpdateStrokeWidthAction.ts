@@ -2,6 +2,7 @@ import { ActionManager, Action } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
 export class UpdateStrokeWidthAction implements Action {
+    type: string;
     objectId: string;
     userId: string;
     timeStamp: number;
@@ -9,6 +10,7 @@ export class UpdateStrokeWidthAction implements Action {
     oldWidth: number;
 
     constructor(width: number, shapeId: string, userId: string, timeStamp: number) {
+        this.type = "updateStrokeWidth";
         this.width = width;
         this.objectId = shapeId;
         this.userId = userId;

@@ -3,6 +3,7 @@ import { Shape } from "../View/Shapes/Shape";
 import { Canvas } from "../View/Canvas";
 
 export class TranslateShapeAction implements Action {
+    type: string;
     objectId: string;
     userId: string;
     timeStamp: number = ActionManager.getTimeStamp();
@@ -10,6 +11,7 @@ export class TranslateShapeAction implements Action {
     oldTranslate: { dx: number, dy: number };
 
     constructor(translate: { dx: number, dy: number }, shapeId: string, userId: string, timeStamp: number) {
+        this.type = "translateShape";
         this.translate = translate;
         this.objectId = shapeId;
         this.userId = userId;
