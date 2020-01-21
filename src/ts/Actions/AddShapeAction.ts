@@ -23,7 +23,7 @@ export class AddShapeAction implements Action {
     }
 
     undo(canvas: Canvas): void {
-        ActionManager.createdShapes.splice(ActionManager.createdShapes.indexOf(this.objectId),1);
+        ActionManager.createdShapes.splice(ActionManager.createdShapes.indexOf(this.objectId), 1);
         this.shape.removeFromCanvas(canvas);
     }
 }

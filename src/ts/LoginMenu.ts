@@ -3,21 +3,20 @@ import * as d3 from "d3-selection";
 import { PeerManager } from "./Peer2Peer/PeerManager";
 
 export class LoginMenu {
-    constructor() {
-        this.setupInteractions();
+    constructor(peerManager: PeerManager) {
+        this.setupInteractions(peerManager);
     }
 
-    setupInteractions(): void {
-        let pm = new PeerManager();
+    setupInteractions(peerManager: PeerManager): void {
         d3.select("#new-room-button")
             .on("click", () => {
-                pm.newRoom();
+                peerManager.newRoom();
             });
 
         d3.select("#join-room-button")
             .on("click", () => {
                 let value = (document.getElementById("join-room-roomid") as HTMLInputElement).value;
-                pm.joinRoom(value);
+                peerManager.joinRoom(value);
             });
     }
 }

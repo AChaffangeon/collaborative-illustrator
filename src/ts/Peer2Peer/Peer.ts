@@ -20,14 +20,18 @@ export class Peer {
     connection: RTCPeerConnection;
     signalingChannel: SignalingChannel;
     dataChannel: RTCDataChannel;
+    isOfferer: boolean;
+    actionManager: ActionManager;
 
-    constructor(signalingChannel: SignalingChannel, isOfferer: boolean = false) {
+    constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
-        this.config(isOfferer);
+        this.isOfferer = isOfferer;
+        this.actionManager = actionManager;
+        this.config();
     }
 
-    config(isOfferer: boolean): void {
+    config(): void {
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
                 console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`);
@@ -35,7 +39,7 @@ export class Peer {
             }
         };
 
-        if (isOfferer) {
+        if (this.isOfferer) {
             this.connection.onnegotiationneeded = () => {
                 console.log(`Create Local Description: ${this.signalingChannel.signalingChannel}`);
 
@@ -101,7 +105,10 @@ export class Peer {
         this.dataChannel.onopen = (event) => {
             console.log(`Datachannel is open with: ${this.signalingChannel.signalingChannel}`);
             this.signalingChannel.close();
-            this.register();
+            this.setupEventHandler();
+            if (this.isOfferer) {
+                this.sendCurrentState();
+            }
         };
 
         this.dataChannel.onmessage = (event) => {
@@ -143,7 +150,7 @@ export class Peer {
         }
     }
 
-    register(): void {
+    setupEventHandler(): void {
 
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
             this.sendEvent(event);
@@ -168,5 +175,9 @@ export class Peer {
         EventManager.registerHandler("shapeDeleted", (event: DeleteShapeEvent) => {
             this.sendEvent(event);
         });
+    }
+
+    sendCurrentState(): void {
+        let actions = this.actionManager.doneActions;
     }
 }

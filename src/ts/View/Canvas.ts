@@ -1,18 +1,21 @@
 import * as d3 from "d3-selection";
 import { ToolBar } from "./ToolBar/ToolBar";
 import { Shape } from "./Shapes/Shape";
+import { InfoPanel } from "./InfoPanel/InfoPanel";
 
 /** A class to create a canvas */
 export class Canvas {
     toolBar: ToolBar;
+    infoPanel: InfoPanel;
     holderSelection: d3.Selection<any, any, any, any>;
     svgSelection: d3.Selection<SVGSVGElement, any, any, any>;
     shapes: Shape[];
 
-    constructor(toolBar: ToolBar) {
+    constructor(toolBar: ToolBar, infoPanel: InfoPanel) {
         this.holderSelection = d3.select("#canvas");
         this.svgSelection = this.holderSelection.append("svg");
         this.toolBar = toolBar;
+        this.infoPanel = infoPanel;
         this.shapes = [];
 
         this.setupUI();
