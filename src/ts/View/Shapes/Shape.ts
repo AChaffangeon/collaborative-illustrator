@@ -60,13 +60,13 @@ export abstract class Shape {
     /**
      * Determines whether the shape is picked
      * @param pt Point cliked on screen, use pageX and pageY
-     * @returns true if picked 
+     * @returns true if picked
      */
     isPicked(pt: Point): boolean {
         let bbox = this.holderSelection.node().getBBox();
-        return pt.x > bbox.x + this.translate.dx && 
-               pt.x < bbox.x + this.translate.dx + bbox.width && 
-               pt.y > bbox.y + this.translate.dy && 
+        return pt.x > bbox.x + this.translate.dx &&
+               pt.x < bbox.x + this.translate.dx + bbox.width &&
+               pt.y > bbox.y + this.translate.dy &&
                pt.y < bbox.y + this.translate.dy + bbox.height;
     }
 
@@ -75,7 +75,9 @@ export abstract class Shape {
     }
 
     unselect(): void {
-        this.holderSelection.classed("selected", false);
+        if(this.holderSelection){
+          this.holderSelection.classed("selected", false);
+        }
     }
 
     static isShape(d3Selection: d3.Selection<any, any, any, any>): boolean {

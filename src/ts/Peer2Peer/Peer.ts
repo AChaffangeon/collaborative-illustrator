@@ -7,6 +7,7 @@ import { StrokeChangedEvent } from '../Events/StrokeChangedEvent';
 import { StrokeWidthChangedEvent } from '../Events/StrokeWidthChangedEvent';
 import { FillChangedEvent } from '../Events/FillChangedEvent';
 import { TranslateShapeEvent } from '../Events/TranslateShapeEvent';
+import { DeleteShapeEvent } from '../Events/DeleteShapeEvent';
 
 const configuration = {
     iceServers: [{
@@ -129,6 +130,9 @@ export class Peer {
                 } else if (msg.id === "translateShape") {
                     let e = new TranslateShapeEvent(msg.action.translate, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
+                } else if (msg.id === "shapeDeleted") {
+                    let e = new DeleteShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
+                    EventManager.emit(e);
                 }
             }
         };
@@ -136,10 +140,8 @@ export class Peer {
 
     send(msg: string): void {
         setTimeout(function(){
-
           this.dataChannel.send(msg);
-
-        }.bind(this), 10000);
+        }.bind(this), 8000);
     }
 
     sendEvent(event: Event): void {
@@ -149,6 +151,7 @@ export class Peer {
     }
 
     register(): void {
+
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
             if (event.action.userId === ActionManager.userId) {
                 this.send(JSON.stringify({ id: event.id, userId: event.action.userId, timeStamp: event.action.timeStamp, data: event.action.shape }));
@@ -168,6 +171,10 @@ export class Peer {
         });
 
         EventManager.registerHandler("translateShape", (event: TranslateShapeEvent) => {
+            this.sendEvent(event);
+        });
+
+        EventManager.registerHandler("shapeDeleted", (event: DeleteShapeEvent) => {
             this.sendEvent(event);
         });
     }

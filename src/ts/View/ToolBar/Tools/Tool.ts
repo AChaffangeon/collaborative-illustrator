@@ -5,7 +5,7 @@ export abstract class Tool {
     id: ToolID = "unknown";
     isDown: boolean;
 
-    constructor() { 
+    constructor() {
         this.isDown = false;
     }
 
@@ -27,20 +27,21 @@ export abstract class Tool {
         this.isDown = true;
      }
 
-    pointerMove(e: PointerEvent, canvas: Canvas): void { 
+    pointerMove(e: PointerEvent, canvas: Canvas): void {
     }
 
-    pointerUp(e: PointerEvent, canvas: Canvas): void { 
+    pointerUp(e: PointerEvent, canvas: Canvas): void {
         this.isDown = false;
     }
 
-    pointerCancel(e: PointerEvent, canvas: Canvas): void { 
+    pointerCancel(e: PointerEvent, canvas: Canvas): void {
         this.isDown = false;
     }
 
-    pointerLeave(e: PointerEvent, canvas: Canvas): void { 
+    pointerLeave(e: PointerEvent, canvas: Canvas): void {
         this.isDown = false;
     }
+    delete(canvas: Canvas): void { }
 
     toUnselect(): void { }
 }

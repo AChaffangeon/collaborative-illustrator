@@ -6,6 +6,7 @@ import { Shape } from "../../Shapes/Shape";
 import { Helpers } from "../../../helpers";
 import { EventManager } from "../../../Events/EventManager";
 import { TranslateShapeEvent } from "../../../Events/TranslateShapeEvent";
+import { DeleteShapeEvent } from "../../../Events/DeleteShapeEvent";
 import { ActionManager } from "../../../Actions/ActionManager";
 
 export class SelectTool extends Tool {
@@ -86,7 +87,7 @@ export class SelectTool extends Tool {
 
         if (this.moved) {
             let translate = this.shape.getTranslate();
-            
+
             let userId = ActionManager.userId;
             let timeStamp = ActionManager.getTimeStamp();
             EventManager.emit(new TranslateShapeEvent(translate, this.shape.id, userId, timeStamp));
@@ -138,6 +139,16 @@ export class SelectTool extends Tool {
         shapeList.forEach((shape) => {
             this.unselectShape(shape);
         });
+    }
+
+    delete(canvas: Canvas): void {
+
+      let userId = ActionManager.userId;
+      let timeStamp = ActionManager.getTimeStamp();
+
+      for(let shape of this.selectedShapes){
+        EventManager.emit(new DeleteShapeEvent(shape.id, userId, timeStamp));
+      }
     }
 
     toUnselect(): void {

@@ -44,7 +44,15 @@ export class Canvas {
         canvasSVG.addEventListener("pointerleave", (e) => {
             this.toolBar.getTool().pointerLeave(e, this);
         });
+
+        document.addEventListener('keyup', (e) => {
+          if(e.code === "Delete"){
+              this.toolBar.getTool().delete(this);
+          }
+        });
     }
+
+
 
     getShape(shapeId: string): Shape {
         let shape;

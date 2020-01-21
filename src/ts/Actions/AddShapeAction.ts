@@ -18,11 +18,12 @@ export class AddShapeAction implements Action {
     }
 
     do(canvas: Canvas): void {
-        //ActionManager.createdShapes.push(this.objectId);
+        ActionManager.createdShapes.push(this.objectId);
         this.shape.addToCanvas(canvas);
     }
 
     undo(canvas: Canvas): void {
+        ActionManager.createdShapes.splice(ActionManager.createdShapes.indexOf(this.objectId),1);
         this.shape.removeFromCanvas(canvas);
     }
 }

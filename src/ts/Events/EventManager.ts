@@ -36,7 +36,6 @@ export class EventManager {
         if (!EventManager.eventHandlers.has(event.id)) {
             return;
         }
-
         EventManager.eventHandlers.get(event.id)
             .forEach((eventHandler: EventHandler<any>) => {
                 eventHandler(event);

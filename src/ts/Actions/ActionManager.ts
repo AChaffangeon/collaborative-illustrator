@@ -5,6 +5,7 @@ import { StrokeChangedEvent } from "../Events/StrokeChangedEvent";
 import { StrokeWidthChangedEvent } from "../Events/StrokeWidthChangedEvent";
 import { FillChangedEvent } from "../Events/FillChangedEvent";
 import { TranslateShapeEvent } from "../Events/TranslateShapeEvent";
+import { DeleteShapeEvent } from "../Events/DeleteShapeEvent";
 
 /** Id of an Action. */
 export type ActionID = string;
@@ -22,6 +23,7 @@ export class ActionManager {
     undoneActions: Action[];
     queueActions: Action[];
     static createdShapes: string[] = [];
+    static deletedShapes: string[] = [];
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
@@ -56,24 +58,25 @@ export class ActionManager {
 
     manageActions(action: Action): void {
         //console.log("action", action);
-
-        /**if(!createdShapes.includes(action.objectId)){
+        if(ActionManager.deletedShapes.includes(action.objectId)){
+          return;
+        }else if(!ActionManager.createdShapes.includes(action.objectId)){
           if(action.type === "addShape"){
             this.doneActions.push(action);
             this.do(action);
 
-            for(let a of queueActions){
+            for(let a of this.queueActions){
                 if(a.objectId === action.objectId){
                   this.doneActions.push(a);
                   this.do(a);
-                  queueActions.splice(queueActions.indexOf(a), 1);
+                  this.queueActions.splice(this.queueActions.indexOf(a), 1);
                 }
             }
 
           }else{
             this.queueActions.push(action);
           }
-        }else **/if(action.timeStamp != ActionManager.timeStamp){
+        }else if(action.timeStamp != ActionManager.timeStamp){
           this.promote(action);
 
         }else{
@@ -130,6 +133,10 @@ export class ActionManager {
         });
 
         EventManager.registerHandler("translateShape", (e: TranslateShapeEvent) => {
+            this.manageActions(e.action);
+        });
+
+        EventManager.registerHandler("shapeDeleted", (e: DeleteShapeEvent) => {
             this.manageActions(e.action);
         });
     }
