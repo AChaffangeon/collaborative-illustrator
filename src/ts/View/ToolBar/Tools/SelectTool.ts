@@ -141,14 +141,15 @@ export class SelectTool extends Tool {
         });
     }
 
-    delete(canvas: Canvas): void {
+    keyUp(e: KeyboardEvent, canvas: Canvas): void {
+        if (e.code === "Delete" || (e.code === "KeyD" && e.ctrlKey)) {
+            let userId = ActionManager.userId;
+            let timeStamp = ActionManager.getTimeStamp();
 
-      let userId = ActionManager.userId;
-      let timeStamp = ActionManager.getTimeStamp();
-
-      for(let shape of this.selectedShapes){
-        EventManager.emit(new DeleteShapeEvent(shape.id, userId, timeStamp));
-      }
+            for (let shape of this.selectedShapes) {
+                EventManager.emit(new DeleteShapeEvent(shape.id, userId, timeStamp));
+            }
+        }
     }
 
     toUnselect(): void {

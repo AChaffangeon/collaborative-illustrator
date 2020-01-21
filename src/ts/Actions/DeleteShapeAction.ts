@@ -22,7 +22,7 @@ export class DeleteShapeAction implements Action {
     }
 
     undo(canvas: Canvas): void {
-        ActionManager.deletedShapes.splice(ActionManager.deletedShapes.indexOf(this.objectId),1);
+        ActionManager.deletedShapes.splice(ActionManager.deletedShapes.indexOf(this.objectId), 1);
         let shape = canvas.getShape(this.objectId);
         shape.addToCanvas(canvas);
     }

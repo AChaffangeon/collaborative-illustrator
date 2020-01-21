@@ -46,9 +46,7 @@ export class Canvas {
         });
 
         document.addEventListener('keyup', (e) => {
-          if(e.code === "Delete"){
-              this.toolBar.getTool().delete(this);
-          }
+            this.toolBar.getTool().keyUp(e, this);
         });
     }
 

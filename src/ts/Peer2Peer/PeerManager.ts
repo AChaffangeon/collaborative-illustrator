@@ -5,6 +5,7 @@ const io = require('socket.io-client');
 
 export class PeerManager {
     peers: Peer[];
+    // tslint:disable-next-line: typedef
     roomServer;
 
     constructor() {

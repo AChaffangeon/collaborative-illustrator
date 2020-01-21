@@ -11,19 +11,18 @@ import { DeleteShapeEvent } from "../Events/DeleteShapeEvent";
 export type ActionID = string;
 
 /** Interface for Actions. */
-export interface Action {type: string; userId: ActionID; objectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
+export interface Action { type: string; userId: ActionID; objectId: string; timeStamp: number; do: (canvas: Canvas) => void; undo: (canvas: Canvas) => void; }
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
-
     static userId: string = `User_${Date.now() + Math.random()}`;
     static timeStamp: number = 0;
+    static createdShapes: string[] = [];
+    static deletedShapes: string[] = [];
     canvas: Canvas;
     doneActions: Action[];
     undoneActions: Action[];
     queueActions: Action[];
-    static createdShapes: string[] = [];
-    static deletedShapes: string[] = [];
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
@@ -42,77 +41,76 @@ export class ActionManager {
         action.undo(this.canvas);
     }
 
-    rankActions(a, b) {
+    rankActions(a: Action, b: Action): number {
 
-      let uIdNumA = parseFloat(a.userId.replace(/[^0-9]/g, ""));
-      let uIdNumB = parseFloat(b.userId.replace(/[^0-9]/g, ""));
+        let uIdNumA = parseFloat(a.userId.replace(/[^0-9]/g, ""));
+        let uIdNumB = parseFloat(b.userId.replace(/[^0-9]/g, ""));
 
-      if(a.timeStamp < b.timeStamp){
-        return -1;
-      }else if (a.timeStamp === b.timeStamp && uIdNumA < uIdNumB){
-        return -1;
-      }else{
-        return 1;
-      }
+        if (a.timeStamp < b.timeStamp) {
+            return -1;
+        }else if (a.timeStamp === b.timeStamp && uIdNumA < uIdNumB) {
+            return -1;
+        }else {
+            return 1;
+        }
     }
 
     manageActions(action: Action): void {
         //console.log("action", action);
-        if(ActionManager.deletedShapes.includes(action.objectId)){
-          return;
-        }else if(!ActionManager.createdShapes.includes(action.objectId)){
-          if(action.type === "addShape"){
+        if (ActionManager.deletedShapes.includes(action.objectId)) {
+            return;
+        } else if (!ActionManager.createdShapes.includes(action.objectId)) {
+            if (action.type === "addShape") {
+                this.doneActions.push(action);
+                this.do(action);
+
+                for (let a of this.queueActions) {
+                    if (a.objectId === action.objectId) {
+                        this.doneActions.push(a);
+                        this.do(a);
+                        this.queueActions.splice(this.queueActions.indexOf(a), 1);
+                    }
+                }
+
+            } else {
+                this.queueActions.push(action);
+            }
+        } else if (action.timeStamp !== ActionManager.timeStamp) {
+            this.promote(action);
+
+        } else {
             this.doneActions.push(action);
             this.do(action);
-
-            for(let a of this.queueActions){
-                if(a.objectId === action.objectId){
-                  this.doneActions.push(a);
-                  this.do(a);
-                  this.queueActions.splice(this.queueActions.indexOf(a), 1);
-                }
-            }
-
-          }else{
-            this.queueActions.push(action);
-          }
-        }else if(action.timeStamp != ActionManager.timeStamp){
-          this.promote(action);
-
-        }else{
-          this.doneActions.push(action);
-          this.do(action);
         }
 
         this.update(action);
     }
 
     promote(action: Action): void {
+        let concurrentActions = [];
 
-      let concurrentActions = [];
-
-      for ( let a of this.doneActions){
-        if(this.rankActions(action,a) < 0 && action.type === a.type){
-          concurrentActions.push(a);
+        for (let a of this.doneActions) {
+            if (this.rankActions(action, a) < 0 && action.type === a.type) {
+                concurrentActions.push(a);
+            }
         }
-      }
 
-      concurrentActions.reverse();
-      for(let a of concurrentActions){
-        this.undo(a);
-      }
+        concurrentActions.reverse();
+        for (let a of concurrentActions) {
+            this.undo(a);
+        }
 
-      this.doneActions.push(action);
-      this.do(action);
+        this.doneActions.push(action);
+        this.do(action);
 
-      concurrentActions.reverse();
-      for(let a of concurrentActions){
-        this.do(a);
-      }
+        concurrentActions.reverse();
+        for (let a of concurrentActions) {
+            this.do(a);
+        }
     }
 
     update(action: Action): void {
-        ActionManager.timeStamp = Math.max(ActionManager.timeStamp,action.timeStamp);
+        ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
      }
 
     setupEventListeners(): void {
@@ -162,8 +160,6 @@ export class ActionManager {
 
     static getTimeStamp(): number {
         ActionManager.timeStamp += 1;
-        let t = ActionManager.timeStamp;
-
-        return t;
+        return ActionManager.timeStamp;
     }
 }

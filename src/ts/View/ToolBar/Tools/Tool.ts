@@ -41,7 +41,8 @@ export abstract class Tool {
     pointerLeave(e: PointerEvent, canvas: Canvas): void {
         this.isDown = false;
     }
-    delete(canvas: Canvas): void { }
+
+    keyUp(e: KeyboardEvent, canvas: Canvas): void { }
 
     toUnselect(): void { }
 }

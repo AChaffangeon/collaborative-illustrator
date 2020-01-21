@@ -3,10 +3,12 @@ const io = require('socket.io-client');
 interface MSG { id: string; }
 
 export class SignalingChannel {
+    // tslint:disable-next-line: typedef
     socket;
     signalingChannel: string;
-    onMSG: (msg) => void;
+    onMSG: (msg: any) => void;
 
+    // tslint:disable-next-line: typedef
     constructor(socket, signalingChannel: string) {
         this.signalingChannel = signalingChannel;
         this.socket = socket;
@@ -20,7 +22,7 @@ export class SignalingChannel {
     }
 
     setupOnMsg(): void {
-        this.socket.on("msg", (msg) => {
+        this.socket.on("msg", (msg: { signalingChannel: string; msg: any; }) => {
             if (msg.signalingChannel !== this.signalingChannel) {
                 return;
             }
@@ -28,7 +30,7 @@ export class SignalingChannel {
         });
     }
 
-    setOnMSG(f: (msg) => void): void {
+    setOnMSG(f: (msg: any) => void): void {
         this.onMSG = f;
     }
 

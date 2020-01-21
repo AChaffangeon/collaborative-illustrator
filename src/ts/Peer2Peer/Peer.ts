@@ -30,7 +30,7 @@ export class Peer {
     config(isOfferer: boolean): void {
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
-                console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`)
+                console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`);
                 this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate });
             }
         };
@@ -59,7 +59,7 @@ export class Peer {
     setLocalDescription(description: RTCSessionDescriptionInit): void {
         this.connection.setLocalDescription(description)
             .then(() => {
-                console.log(`[SENT] Local description TO: ${this.signalingChannel.signalingChannel}`)
+                console.log(`[SENT] Local description TO: ${this.signalingChannel.signalingChannel}`);
                 this.signalingChannel.send({ id: "SDP", description: this.connection.localDescription });
             })
             .catch((e) => console.log(`Error set local description with: ${this.signalingChannel.signalingChannel}: `, e));
@@ -105,14 +105,9 @@ export class Peer {
         };
 
         this.dataChannel.onmessage = (event) => {
-            //console.log(ActionManager.timeStamp);
-            //ActionManager.timeStamp += 1;
-            //console.log(ActionManager.timeStamp);
             let msg = JSON.parse(event.data);
             if (msg) {
-                //console.log(msg);
                 if (msg.id === "shapeCreated") {
-                    //console.log(msg);
                     let shape = new FreeForm();
                     shape.addPoints(msg.data.path);
                     shape.id = msg.data.id;
@@ -139,9 +134,7 @@ export class Peer {
     }
 
     send(msg: string): void {
-        setTimeout(function(){
-          this.dataChannel.send(msg);
-        }.bind(this), 8000);
+        this.dataChannel.send(msg);
     }
 
     sendEvent(event: Event): void {

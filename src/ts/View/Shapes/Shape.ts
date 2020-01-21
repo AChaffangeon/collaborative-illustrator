@@ -75,8 +75,8 @@ export abstract class Shape {
     }
 
     unselect(): void {
-        if(this.holderSelection){
-          this.holderSelection.classed("selected", false);
+        if (this.holderSelection) {
+            this.holderSelection.classed("selected", false);
         }
     }
 

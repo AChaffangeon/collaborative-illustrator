@@ -1,5 +1,6 @@
 {
     "rules": {
+        "indent": [true, "spaces", 4],
         "no-var-keyword": true,
         "triple-equals": true,
         "typedef-whitespace": true,
