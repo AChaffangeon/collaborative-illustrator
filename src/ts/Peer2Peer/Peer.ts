@@ -109,9 +109,9 @@ export class Peer {
             if (msg) {
                 if (msg.id === "shapeCreated") {
                     let shape = new FreeForm();
-                    shape.addPoints(msg.data.path);
-                    shape.id = msg.data.id;
-                    let e = new ShapeCreatedEvent(shape, msg.userId, msg.timeStamp);
+                    shape.addPoints(msg.action.shape.path);
+                    shape.id = msg.action.objectId;
+                    let e = new ShapeCreatedEvent(shape, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "strokeChanged") {
                     let e = new StrokeChangedEvent(msg.action.color, msg.action.objectId, msg.action.userId, msg.action.timeStamp);
@@ -146,9 +146,7 @@ export class Peer {
     register(): void {
 
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
-            if (event.action.userId === ActionManager.userId) {
-                this.send(JSON.stringify({ id: event.id, userId: event.action.userId, timeStamp: event.action.timeStamp, data: event.action.shape }));
-            }
+            this.sendEvent(event);
         });
 
         EventManager.registerHandler("strokeChanged", (event: StrokeChangedEvent) => {
