@@ -8,6 +8,12 @@ import { StrokeWidthChangedEvent } from '../Events/StrokeWidthChangedEvent';
 import { FillChangedEvent } from '../Events/FillChangedEvent';
 import { TranslateShapeEvent } from '../Events/TranslateShapeEvent';
 import { DeleteShapeEvent } from '../Events/DeleteShapeEvent';
+import { AddShapeAction } from '../Actions/AddShapeAction';
+import { DeleteShapeAction } from '../Actions/DeleteShapeAction';
+import { TranslateShapeAction } from '../Actions/TranslateShapeAction';
+import { UpdateFillAction } from '../Actions/UpdateFillAction';
+import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
+import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 
 const configuration = {
     iceServers: [{
@@ -106,7 +112,7 @@ export class Peer {
             console.log(`Datachannel is open with: ${this.signalingChannel.signalingChannel}`);
             this.signalingChannel.close();
             this.setupEventHandler();
-            if (this.isOfferer) {
+            if (!this.isOfferer) {
                 this.sendCurrentState();
             }
         };
@@ -179,5 +185,22 @@ export class Peer {
 
     sendCurrentState(): void {
         let actions = this.actionManager.doneActions;
+        actions.forEach((action) => {
+            let e: Event;
+            if (action instanceof AddShapeAction) {
+                e = new ShapeCreatedEvent(action.shape, action.userId, action.timeStamp);
+            } else if (action instanceof DeleteShapeAction) {
+                e = new DeleteShapeEvent(action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof TranslateShapeAction) {
+                e = new TranslateShapeEvent(action.translate, action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof UpdateFillAction) {
+                e = new FillChangedEvent(action.color, action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof UpdateStrokeAction) {
+                e = new StrokeChangedEvent(action.color, action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof UpdateStrokeWidthAction) {
+                e = new StrokeWidthChangedEvent(action.width, action.objectId, action.userId, action.timeStamp);
+            }
+            this.sendEvent(e);
+        });
     }
 }
