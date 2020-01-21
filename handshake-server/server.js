@@ -1,28 +1,37 @@
 const server = require('http').createServer();
-require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('addr: ' + add);
-})
-const io = require('socket.io')(server);
+const { Server } = require('ws');
+
+const wss = new Server({ server });
 
 let rooms = {}
 roomsNb = 0;
 let signalingChannels = {}
 signalingChannelsNb = 0;
 
-io.on('connection', client => {
-    client.on("newRoom", () => newRoom(client));
-    client.on("joinRoom", (msg) => joinRoom(msg, client));
-    client.on("msg", (msg) => sendMsg(msg, client));
-    client.on("closeSC", (msg) => closeSC(msg))
+wss.on('connection', (client) => {
+    client.on('message', (message) => {
+        let msg = JSON.parse(message);
+        if (msg.id === "newRoom") {
+            newRoom(client);
+        } else if (msg.id === "joinRoom") {
+            joinRoom(msg.data, client);
+        } else if (msg.id === "msg") {
+            relayMsg(msg.data, client);
+        } else if (msg.id === "closeSC") {
+            closeSC(msg.data);
+        }
+    })
 });
 
 function newRoom(client) {
     roomsNb += 1;
     let room = `room-${roomsNb}`;
     rooms[room] = [client];
-    client.emit("roomCreated", {roomId: room})
+    sendToClient(client, 
+        "roomCreated", 
+        {roomId: room});
 
-    client.on('disconnect', () => {
+    client.on('close', () => {
         rooms[room] = rooms[room].filter((val, i, a) => { return val !== client });
     });
 }
@@ -31,7 +40,7 @@ function joinRoom(msg, client) {
     let room = msg.roomId;
 
     if(!rooms.hasOwnProperty(room)){
-        client.emit("roomJoined", {status: 404});
+        sendToClient(client, "roomJoined", {status: 404});
         return;
     }
 
@@ -40,14 +49,21 @@ function joinRoom(msg, client) {
         let signalingChannel = `sc-${signalingChannelsNb}`;
         signalingChannels[signalingChannel] = [c, client];
 
-        c.emit("newPeer", {signalingChannel: signalingChannel})
-        client.emit("connectToPeer", {signalingChannel: signalingChannel})
+        sendToClient(c, 
+            "newPeer", 
+            {signalingChannel: signalingChannel});
+        sendToClient(client, 
+            "connectToPeer", 
+            {signalingChannel: signalingChannel});
     })
     rooms[room].push(client);
-    client.emit("roomJoined", {status: 200})
+    sendToClient(client, "roomJoined", {status: 200});
+    client.on('close', () => {
+        rooms[room] = rooms[room].filter((val, i, a) => { return val !== client });
+    });
 }
 
-function sendMsg(msg, client){
+function relayMsg(msg, client){
     let signalingChannel = msg.signalingChannel;
     if (signalingChannels[signalingChannel] === undefined) {
         return;
@@ -55,7 +71,7 @@ function sendMsg(msg, client){
     signalingChannels[signalingChannel]
         .forEach((c) => {
             if(c !== client) {
-                c.emit("msg", msg);
+                sendToClient(c, "msg", msg);
             }
         })
 }
@@ -63,9 +79,12 @@ function sendMsg(msg, client){
 function closeSC(msg){
     let sc = msg.signalingChannel;
     if (signalingChannels.hasOwnProperty(sc)) {
-        console.log("Signaling channel closed: ", sc);
         delete signalingChannels[sc];
     }
+}
+
+function sendToClient(client, id, msg) {
+    client.send(JSON.stringify({id: id, data: msg}));
 }
 
 server.listen(3000);

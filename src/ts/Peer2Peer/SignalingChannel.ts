@@ -1,19 +1,20 @@
+import { RoomServer } from "./roomServer";
+
 const io = require('socket.io-client');
 
 interface MSG { id: string; }
 
 export class SignalingChannel {
     // tslint:disable-next-line: typedef
-    socket;
+    socket: RoomServer;
     signalingChannel: string;
     onMSG: (msg: any) => void;
 
     // tslint:disable-next-line: typedef
-    constructor(socket, signalingChannel: string) {
+    constructor(socket: RoomServer, signalingChannel: string) {
         this.signalingChannel = signalingChannel;
         this.socket = socket;
         this.onMSG = (msg) => { };
-
         this.setupOnMsg();
     }
 
@@ -22,11 +23,11 @@ export class SignalingChannel {
     }
 
     setupOnMsg(): void {
-        this.socket.on("msg", (msg: { signalingChannel: string; msg: any; }) => {
-            if (msg.signalingChannel !== this.signalingChannel) {
+        this.socket.register("msg", (data) => {
+            if (data.signalingChannel !== this.signalingChannel) {
                 return;
             }
-            this.onMSG(msg.msg);
+            this.onMSG(data.msg);
         });
     }
 
