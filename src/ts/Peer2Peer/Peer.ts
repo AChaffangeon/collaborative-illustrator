@@ -201,7 +201,7 @@ export class Peer {
             } else if (action instanceof UpdateStrokeWidthAction) {
                 e = new StrokeWidthChangedEvent(action.width, action.objectId, action.userId, action.timeStamp);
             }
-            this.sendEvent(e);
+            this.send(JSON.stringify(event));
         });
     }
 }
