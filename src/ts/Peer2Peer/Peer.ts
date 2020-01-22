@@ -19,22 +19,6 @@ const configuration = {
     iceServers: [
         {
             urls: 'stun:stun.l.google.com:19302'
-        },
-        {
-            urls: 'turn:numb.viagenie.ca',
-            credential: 'azer2711',
-            username: 'adrichou42@gmail.com'
-        },
-        // Below TURN servers where found on https://gist.github.com/sagivo/3a4b2f2c7ac6e1b5267c2f1f59ac6c6b
-        {
-            urls: 'turn:turn.bistri.com:80',
-            credential: 'homeo',
-            username: 'homeo'
-        },
-        {
-            urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-            credential: 'webrtc',
-            username: 'webrtc'
         }]
 };
 
