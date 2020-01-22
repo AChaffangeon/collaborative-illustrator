@@ -24,4 +24,16 @@ export class InfoPanel {
     setStrokeWidth(width: number): void {
         this.strokePicker.setStrokeWidth(width);
     }
+
+    getFill(): string {
+        return this.fillPicker.fill;
+    }
+
+    getStroke(): string {
+        return this.strokePicker.stroke;
+    }
+
+    getStrokeWidth(): number {
+        return this.strokePicker.strokeWidth;
+    }
 }
