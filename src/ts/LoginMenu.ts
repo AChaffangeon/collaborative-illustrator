@@ -16,7 +16,7 @@ export class LoginMenu {
         d3.select("#join-room-button")
             .on("click", () => {
                 let value = (document.getElementById("join-room-roomid") as HTMLInputElement).value;
-                peerManager.joinRoom(value);
+                peerManager.joinRoom(`room-${value}`);
             });
     }
 }

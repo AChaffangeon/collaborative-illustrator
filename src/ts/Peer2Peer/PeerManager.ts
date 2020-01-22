@@ -51,8 +51,8 @@ export class PeerManager {
         d3.select("#menu")
             .append("div")
             .attr("id", "room-id")
-            .text(`Room: ${roomId}`);
+            .text(`ID: ${roomId}`);
 
-        d3.select("#login-popup").remove();
+        d3.select("#login-screen").remove();
     }
 }
