@@ -103,6 +103,8 @@ export class SelectTool extends Tool {
             } else {
                 this.selectShape(this.shape);
                 canvas.infoPanel.setFill(this.shape.getFill());
+                canvas.infoPanel.setStroke(this.shape.getStroke());
+                canvas.infoPanel.setStrokeWidth(this.shape.getStrokeWidth());
             }
         }
 

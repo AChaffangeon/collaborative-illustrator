@@ -14,7 +14,14 @@ export class InfoPanel {
     }
 
     setFill(color: string): void {
-        console.log(color);
         this.fillPicker.setFill(color);
+    }
+
+    setStroke(color: string): void {
+        this.strokePicker.setStroke(color);
+    }
+
+    setStrokeWidth(width: number): void {
+        this.strokePicker.setStrokeWidth(width);
     }
 }

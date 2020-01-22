@@ -87,7 +87,6 @@ export class FillPicker {
     }
 
     setFill(color: string): void {
-        console.log(color);
         this.fill = color;
 
         let selectButton = 
@@ -103,8 +102,8 @@ export class FillPicker {
         } else {
             selectButton.value = "fill";
             d3.select(colorButton)
-                .attr("value", this.fill)
                 .style("display", "initial");
+            colorButton.value = this.fill;
         }
     }
 }

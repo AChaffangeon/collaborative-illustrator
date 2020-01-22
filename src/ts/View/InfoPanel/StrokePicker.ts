@@ -99,4 +99,27 @@ export class StrokePicker {
     getStrokeWidth(): number {
         return this.strokeWidth;
     }
+
+    setStroke(color: string): void {
+        this.stroke = color;
+
+        (this.holderSelection
+            .select("input[type='color']")
+                .node() as HTMLInputElement)
+                .value = color;
+    }
+
+    setStrokeWidth(width: number): void {
+        this.strokeWidth = width;
+
+        (this.holderSelection
+            .select("#stroke-width-text-input")
+            .node() as HTMLInputElement)
+                .value = width.toString();
+
+        (this.holderSelection
+            .select("input[type='range']")
+            .node() as HTMLInputElement)
+                .value = width.toString();
+    }
 }
