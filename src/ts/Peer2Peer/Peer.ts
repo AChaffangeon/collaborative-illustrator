@@ -16,9 +16,15 @@ import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
 import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 
 const configuration = {
-    iceServers: [{
-        urls: 'stun:stun.l.google.com:19302'
-    }]
+    iceServers: [
+        {
+            urls: 'stun:stun.l.google.com:19302'
+        },
+        {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'adrichou42@gmail.com',
+            credential: 'azer2711'
+        }]
 };
 
 /** Based on the code from https://github.com/ScaleDrone/webrtc-text-chat-tutorial/blob/master/script.js */
