@@ -1,8 +1,8 @@
-import { ActionEvent } from "./EventManager";
+import { Event } from "./EventManager";
 import { Shape } from "../View/Shapes/Shape";
 import { AddShapeAction } from "../Actions/AddShapeAction";
 
-export class ShapeCreatedEvent implements ActionEvent {
+export class ShapeCreatedEvent implements Event {
     id: string = "shapeCreated";
     action: AddShapeAction;
 

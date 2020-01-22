@@ -1,7 +1,7 @@
-import { ActionEvent } from "./EventManager";
+import { Event } from "./EventManager";
 import { UpdateFillAction } from "../Actions/UpdateFillAction";
 
-export class FillChangedEvent implements ActionEvent{
+export class FillChangedEvent implements Event{
     id: string = "fillChanged";
     action: UpdateFillAction;
 

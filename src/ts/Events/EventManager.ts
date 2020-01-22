@@ -4,8 +4,7 @@ import { Action } from "../Actions/ActionManager";
 export type EventID = string;
 
 /** Interface for personalized Events. */
-export interface Event { id: EventID; }
-export interface ActionEvent extends Event { action: Action; }
+export interface Event { id: EventID; action: Action; }
 
 /** Type for function that handles personalized Events. */
 export type EventHandler<E extends Event> = (e: Event) => void;
