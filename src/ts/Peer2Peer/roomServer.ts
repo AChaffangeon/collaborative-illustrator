@@ -3,7 +3,7 @@ export class RoomServer {
     ws: WebSocket;
 
     constructor() {
-        this.ws = new WebSocket('ws://collaborative-illustrator.herokuapp.com/');
+        this.ws = new WebSocket('wss://collaborative-illustrator.herokuapp.com/');
         this.msgHandlers = { };
         this.keepAlive();
         this.ws.onopen = () => { console.log("Connected")};
