@@ -12,4 +12,9 @@ export class InfoPanel {
         this.strokePicker = new StrokePicker(this);
         this.fillPicker = new FillPicker(this);
     }
+
+    setFill(color: string): void {
+        console.log(color);
+        this.fillPicker.setFill(color);
+    }
 }

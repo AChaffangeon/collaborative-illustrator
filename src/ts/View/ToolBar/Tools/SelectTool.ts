@@ -102,6 +102,7 @@ export class SelectTool extends Tool {
                 this.unselectShape(this.shape);
             } else {
                 this.selectShape(this.shape);
+                canvas.infoPanel.setFill(this.shape.getFill());
             }
         }
 

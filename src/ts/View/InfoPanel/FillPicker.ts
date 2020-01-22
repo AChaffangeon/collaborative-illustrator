@@ -3,6 +3,7 @@ import { EventManager } from "../../Events/EventManager";
 import { Shape } from "../Shapes/Shape";
 import { FillChangedEvent } from "../../Events/FillChangedEvent";
 import { ActionManager } from "../../Actions/ActionManager";
+import * as d3 from "d3-selection";
 
 export class FillPicker {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
@@ -83,5 +84,27 @@ export class FillPicker {
 
     getColor(): string {
         return this.fill;
+    }
+
+    setFill(color: string): void {
+        console.log(color);
+        this.fill = color;
+
+        let selectButton = 
+            this.holderSelection
+                .select("#color-picker-option-button")
+                    .node() as HTMLSelectElement;
+        let colorButton = this.holderSelection
+            .select("input").node() as HTMLSelectElement;
+
+        if (color === "none") {
+            selectButton.value = "no-fill";
+            d3.select(colorButton).style("display", "none");
+        } else {
+            selectButton.value = "fill";
+            d3.select(colorButton)
+                .attr("value", this.fill)
+                .style("display", "initial");
+        }
     }
 }
