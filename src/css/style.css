@@ -132,12 +132,10 @@ body {
     stroke-linejoin: round;
 }
 
-#canvas .shape {
-    filter: none;
-}
-
-#canvas .shape.selected {
-    filter: url(#red-outline);
+.selection-rect {
+    fill: none;
+    stroke: blue;
+    stroke-width: 2px;
 }
 
 #canvas path.in-creation {

@@ -72,11 +72,19 @@ export abstract class Shape {
 
     select(): void {
         this.holderSelection.classed("selected", true);
+        let bbox = this.holderSelection.node().getBBox();
+        this.holderSelection.append("rect")
+            .attr("x", bbox.x - 5)
+            .attr("y", bbox.y - 5)
+            .attr("width", bbox.width + 10)
+            .attr("height", bbox.height + 10)
+            .classed("selection-rect", true);
     }
 
     unselect(): void {
         if (this.holderSelection) {
             this.holderSelection.classed("selected", false);
+            this.holderSelection.select("rect").remove();
         }
     }
 
