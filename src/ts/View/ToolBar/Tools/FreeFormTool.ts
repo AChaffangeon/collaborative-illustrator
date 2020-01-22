@@ -24,6 +24,13 @@ export class FreeFormTool extends Tool {
 
         this.currentPoints = [point];
         this.currentShape = canvas.svgSelection.append("path").classed("in-creation", true);
+        //this.currentShape.style("strokeWidth",canvas.infoPanel.strokePicker.strokeWidth);
+
+        this.currentShape.style("fill", canvas.infoPanel.fillPicker.fill)
+          .style("stroke-width", `${canvas.infoPanel.strokePicker.strokeWidth}px`)
+          .style("stroke", canvas.infoPanel.strokePicker.stroke);
+
+
      }
 
     pointerMove(e: PointerEvent, canvas: Canvas): void {
@@ -38,14 +45,20 @@ export class FreeFormTool extends Tool {
         this.currentShape.attr("d", Helpers.pointsToDAttr(this.currentPoints));
     }
 
-    pointerUp(e: PointerEvent, canvas: Canvas): void { 
+    pointerUp(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
         }
         super.pointerUp(e, canvas);
 
         let shape = new FreeForm();
+
+
+        shape.setStroke(canvas.infoPanel.strokePicker.stroke);
+        shape.setStrokeWidth(canvas.infoPanel.strokePicker.strokeWidth);
+        shape.setFill(canvas.infoPanel.fillPicker.fill);
         shape.addPoints(this.currentPoints);
+
         EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.getTimeStamp()));
 
         this.currentPoints = undefined;
@@ -53,14 +66,14 @@ export class FreeFormTool extends Tool {
         this.currentShape = undefined;
     }
 
-    pointerCancel(e: PointerEvent, canvas: Canvas): void { 
+    pointerCancel(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
         }
         super.pointerCancel(e, canvas);
     }
 
-    pointerLeave(e: PointerEvent, canvas: Canvas): void { 
+    pointerLeave(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
         }
