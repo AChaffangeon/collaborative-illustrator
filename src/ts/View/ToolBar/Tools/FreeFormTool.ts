@@ -24,10 +24,13 @@ export class FreeFormTool extends Tool {
 
         this.currentPoints = [point];
         this.currentShape = canvas.svgSelection.append("path").classed("in-creation", true);
+        //this.currentShape.style("strokeWidth",canvas.infoPanel.strokePicker.strokeWidth);
 
-        this.currentShape.style("fill", canvas.infoPanel.getFill())
-          .style("stroke-width", `${canvas.infoPanel.getStrokeWidth()}px`)
-          .style("stroke", canvas.infoPanel.getStroke());
+        this.currentShape.style("fill", canvas.infoPanel.fillPicker.fill)
+          .style("stroke-width", `${canvas.infoPanel.strokePicker.strokeWidth}px`)
+          .style("stroke", canvas.infoPanel.strokePicker.stroke);
+
+
      }
 
     pointerMove(e: PointerEvent, canvas: Canvas): void {
@@ -50,9 +53,10 @@ export class FreeFormTool extends Tool {
 
         let shape = new FreeForm();
 
-        shape.setStroke(canvas.infoPanel.strokePicker.getStroke());
-        shape.setStrokeWidth(canvas.infoPanel.getStrokeWidth());
-        shape.setFill(canvas.infoPanel.getFill());
+
+        shape.setStroke(canvas.infoPanel.strokePicker.stroke);
+        shape.setStrokeWidth(canvas.infoPanel.strokePicker.strokeWidth);
+        shape.setFill(canvas.infoPanel.fillPicker.fill);
         shape.addPoints(this.currentPoints);
 
         EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.getTimeStamp()));
