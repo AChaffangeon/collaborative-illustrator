@@ -1,8 +1,7 @@
-import { Event } from "./EventManager";
-import { Shape } from "../View/Shapes/Shape";
+import { ActionEvent } from "./EventManager";
 import { DeleteShapeAction } from "../Actions/DeleteShapeAction";
 
-export class DeleteShapeEvent implements Event {
+export class DeleteShapeEvent implements ActionEvent {
     id: string = "shapeDeleted";
     action: DeleteShapeAction;
 

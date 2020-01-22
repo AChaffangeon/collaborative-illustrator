@@ -1,7 +1,7 @@
-import { Event } from "./EventManager";
+import { ActionEvent } from "./EventManager";
 import { UpdateStrokeAction } from "../Actions/UpdateStrokeAction";
 
-export class StrokeChangedEvent implements Event{
+export class StrokeChangedEvent implements ActionEvent{
     id: string = "strokeChanged";
     action: UpdateStrokeAction;
 

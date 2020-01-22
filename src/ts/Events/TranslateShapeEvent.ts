@@ -1,7 +1,7 @@
-import { Event } from "./EventManager";
+import { ActionEvent } from "./EventManager";
 import { TranslateShapeAction } from "../Actions/TranslateShapeAction";
 
-export class TranslateShapeEvent implements Event {
+export class TranslateShapeEvent implements ActionEvent {
     id: string = "translateShape";
     action: TranslateShapeAction;
 
