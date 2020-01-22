@@ -12,10 +12,7 @@ install:
 
 script:
   - grunt build
-  - grunt make-doc
   - mv build deploy
-  - mv docs deploy/docs
-  - touch deploy/.nojekyll
 
 deploy:
   provider: pages
