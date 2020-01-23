@@ -15,6 +15,7 @@ import { UpdateFillAction } from '../Actions/UpdateFillAction';
 import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
 import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
+import {DisconectEvent} from "../Events/DisconectEvent";
 
 
 const configuration = {
@@ -37,14 +38,13 @@ export class Peer {
     static colorList: string[] = ["#FF0000","#FF00FF","#FFFF00"];
     static index: number = 0;
 
-    constructor(peerDisplay: PeerDisplay, signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
+    constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
-        this.peerDisplay = peerDisplay;
         this.setupColor();
-        this.peerDisplay.addNewPeer(this.color);
+        PeerDisplay.addNewPeer(this.color,ActionManager.userId);
         this.config();
 
     }
@@ -158,6 +158,9 @@ export class Peer {
                 } else if (msg.id === "shapeDeleted") {
                     let e = new DeleteShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
+                } else if (msg.id === "disconect") {
+                    let e = new DisconectEvent(msg.action.userId, msg.action.timeStamp);
+                    EventManager.emit(e);
                 }
             }
         };
@@ -198,6 +201,11 @@ export class Peer {
         EventManager.registerHandler("shapeDeleted", (event: DeleteShapeEvent) => {
             this.sendEvent(event);
         });
+
+        EventManager.registerHandler("disconect", (event: DisconectEvent) => {
+            this.sendEvent(event);
+        });
+
     }
 
     sendCurrentState(): void {

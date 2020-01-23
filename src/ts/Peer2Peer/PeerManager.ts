@@ -9,11 +9,9 @@ const io = require('socket.io-client');
 export class PeerManager {
     // tslint:disable-next-line: typedef
     roomServer: RoomServer;
-    peerDisplay: PeerDisplay;
 
-    constructor(actionManager: ActionManager, peerDisplay: PeerDisplay) {
+    constructor(actionManager: ActionManager) {
         this.roomServer = new RoomServer();
-        this.peerDisplay = peerDisplay;
         this.setupServerListeners(actionManager);
     }
 
@@ -23,12 +21,12 @@ export class PeerManager {
         this.roomServer.register("newPeer", (data) => {
             console.log("new user:", data.signalingChannel);
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer(this.peerDisplay, sc, actionManager);
+            new Peer(sc, actionManager);
         });
         this.roomServer.register("connectToPeer", (data) => {
             console.log("connect to user:", data.signalingChannel);
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer(this.peerDisplay, sc, actionManager, true);
+            new Peer( sc, actionManager, true);
 
         });
     }
