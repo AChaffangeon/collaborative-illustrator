@@ -1,16 +1,19 @@
 import * as d3 from "d3-selection";
 import { StrokePicker } from "./StrokePicker";
 import { FillPicker } from "./FillPicker";
+import { PeerDisplay } from "./PeerDisplay";
 
 export class InfoPanel {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
     strokePicker: StrokePicker;
     fillPicker: FillPicker;
+    peerList: PeerDisplay;
 
     constructor() {
         this.holderSelection = d3.select("#info-panel");
         this.strokePicker = new StrokePicker(this);
         this.fillPicker = new FillPicker(this);
+        this.peerList = new PeerDisplay(this);
     }
 
     setFill(color: string): void {

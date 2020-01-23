@@ -275,3 +275,17 @@ body {
     position: absolute;
     right: 14px;
 }
+
+.peerList {
+    background-color: #3F4147;
+    padding-bottom: 4px;
+    min-height: 100px;
+}
+
+.peerList .header {
+    background-color: #2F3133;
+    color: white;
+    font-size: 20px;
+    margin-bottom: 6px;
+    padding: 4px;
+}

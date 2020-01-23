@@ -1,5 +1,5 @@
 import { SignalingChannel } from './SignalingChannel';
-import { EventManager, Event } from '../Events/EventManager';
+import { EventManager, Event, ActionEvent } from '../Events/EventManager';
 import { ShapeCreatedEvent } from '../Events/ShapeCreatedEvent';
 import { FreeForm } from '../View/Shapes/FreeForm';
 import { ActionManager } from '../Actions/ActionManager';
@@ -14,6 +14,8 @@ import { TranslateShapeAction } from '../Actions/TranslateShapeAction';
 import { UpdateFillAction } from '../Actions/UpdateFillAction';
 import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
 import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
+import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
+
 
 const configuration = {
     iceServers: [
@@ -30,12 +32,26 @@ export class Peer {
     isOfferer: boolean;
     actionManager: ActionManager;
 
-    constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
+    peerDisplay: PeerDisplay;
+    color: string;
+    static colorList: string[] = ["#FF0000","#FF00FF","#FFFF00"];
+    static index: number = 0;
+
+    constructor(peerDisplay: PeerDisplay, signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
+        this.peerDisplay = peerDisplay;
+        this.setupColor();
+        this.peerDisplay.addNewPeer(this.color);
         this.config();
+
+    }
+
+    setupColor(): void{
+      this.color = Peer.colorList[Peer.index];
+      Peer.index = (Peer.index+1)%Peer.colorList.length;
     }
 
     config(): void {
@@ -151,7 +167,7 @@ export class Peer {
         this.dataChannel.send(msg);
     }
 
-    sendEvent(event: Event): void {
+    sendEvent(event: ActionEvent): void {
         if (event.action.userId === ActionManager.userId) {
             this.send(JSON.stringify(event));
         }

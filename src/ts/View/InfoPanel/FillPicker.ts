@@ -25,7 +25,7 @@ export class FillPicker {
                 .classed("header", true)
                 .text("Fill");
 
-        let selectButton = 
+        let selectButton =
             this.holderSelection
                 .append("select")
                     .attr("id", "color-picker-option-button");
@@ -37,7 +37,7 @@ export class FillPicker {
             .append("option")
                 .attr("value", "fill")
                 .text("Color");
-        
+
         this.holderSelection
             .append("input")
                 .attr("type", "color")
@@ -45,7 +45,7 @@ export class FillPicker {
                 .style("display", "none");
     }
 
-    private setupInteraction(): void {  
+    private setupInteraction(): void {
         this.holderSelection
             .select("select")
                 .on("change", () => {
@@ -60,7 +60,7 @@ export class FillPicker {
                         this.holderSelection
                             .select("input")
                             .style("display", "initial");
-                        
+
                         let v = (this.holderSelection.select("input").node() as HTMLInputElement).value;
                         this.updateColor(v);
                     }
@@ -89,7 +89,7 @@ export class FillPicker {
     setFill(color: string): void {
         this.fill = color;
 
-        let selectButton = 
+        let selectButton =
             this.holderSelection
                 .select("#color-picker-option-button")
                     .node() as HTMLSelectElement;

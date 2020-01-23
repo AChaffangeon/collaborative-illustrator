@@ -5,7 +5,5 @@ import { ActionManager } from "./Actions/ActionManager";
 import { LoginMenu } from "./LoginMenu";
 import { PeerManager } from "./Peer2Peer/PeerManager";
 
-new LoginMenu(new PeerManager(new ActionManager(new Canvas(new ToolBar(), new InfoPanel()))));
-
-
-
+let infoPanel = new InfoPanel();
+new LoginMenu(new PeerManager(new ActionManager(new Canvas(new ToolBar(), infoPanel)),infoPanel.peerList ));
