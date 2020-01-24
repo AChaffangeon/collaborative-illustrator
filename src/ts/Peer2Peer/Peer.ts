@@ -147,6 +147,9 @@ export class Peer {
                     let shape = new FreeForm();
                     shape.addPoints(msg.action.shape.path);
                     shape.id = msg.action.objectId;
+                    shape.stroke = msg.action.shape.stroke;
+                    shape.strokeWidth = msg.action.shape.strokeWidth;
+                    shape.fill = msg.action.shape.fill;
                     let e = new ShapeCreatedEvent(shape, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "strokeChanged") {
