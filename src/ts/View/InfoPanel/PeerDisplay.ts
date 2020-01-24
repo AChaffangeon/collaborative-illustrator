@@ -11,16 +11,13 @@ export class PeerDisplay {
 
     static holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
     static svg: d3.Selection<SVGElement, any, any, any>;
-    static peerInfoList: PeerInfo[];
+    static peerInfoList: PeerInfo[] = [];
 
     constructor(infoPanel: InfoPanel) {
         PeerDisplay.holderSelection = infoPanel.holderSelection
             .append("div")
                 .attr("id", "peerList")
                 .classed("peerList", true);
-
-        PeerDisplay.peerInfoList = [];
-
         PeerDisplay.setupUI();
         PeerDisplay.svg = PeerDisplay.holderSelection.append("svg");
 
@@ -34,7 +31,6 @@ export class PeerDisplay {
     }
 
     static removePeer(id:string): void{
-      console.log(id, PeerDisplay.peerInfoList);
       let cpt = 0;
       for(let i in PeerDisplay.peerInfoList){
         if(PeerDisplay.peerInfoList[cpt].id === id){
@@ -43,17 +39,20 @@ export class PeerDisplay {
         }
         cpt++;
       }
+      PeerDisplay.redrawCircles();
     }
 
     private static setupUI(): void {
         PeerDisplay.holderSelection
             .append("div")
                 .classed("header", true)
-                .text("Collaborators list");
+                .text("Other collaborators connected");
     }
 
     private static redrawCircles(): void {
         let nbInLine = 0;
+        PeerDisplay.svg.remove();
+        PeerDisplay.svg = PeerDisplay.holderSelection.append("svg");
         for(let peerInfo of PeerDisplay.peerInfoList){
           PeerDisplay.svg.append('circle')
               .attr('cx', 30 + 40*(nbInLine%6))

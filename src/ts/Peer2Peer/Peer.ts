@@ -32,10 +32,10 @@ export class Peer {
     dataChannel: RTCDataChannel;
     isOfferer: boolean;
     actionManager: ActionManager;
-
+    peerId: string;
     peerDisplay: PeerDisplay;
     color: string;
-    static colorList: string[] = ["#FF0000","#FF00FF","#FFFF00"];
+    static colorList: string[] = ["#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7","#000000"];
     static index: number = 0;
 
     constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
@@ -43,8 +43,8 @@ export class Peer {
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
+        this.peerId = "null";
         this.setupColor();
-        PeerDisplay.addNewPeer(this.color,ActionManager.userId);
         this.config();
 
     }
@@ -58,7 +58,7 @@ export class Peer {
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
                 console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`);
-                this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate });
+                this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate, userId: ActionManager.userId });
             }
         };
 
@@ -98,6 +98,10 @@ export class Peer {
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
+                        if(this.peerId === "null"){
+                          this.peerId = msg.userId;
+                          PeerDisplay.addNewPeer(this.color,this.peerId);
+                        }
                         this.connection.addIceCandidate(msg.candidate);
                     }
                     break;

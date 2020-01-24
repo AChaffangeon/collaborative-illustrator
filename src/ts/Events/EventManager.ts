@@ -21,7 +21,6 @@ export class EventManager {
       window.onbeforeunload = sendEvent;
       function sendEvent(){
           EventManager.emit(new DisconectEvent(ActionManager.userId, ActionManager.getTimeStamp()));
-          return "You have attempted to leave this page. Are you sure?";
       };
     }
 
