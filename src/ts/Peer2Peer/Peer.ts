@@ -56,6 +56,7 @@ export class Peer {
     }
 
     config(): void {
+        console.log(`Connect TO: ${this.peerId}`);
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
                 console.log(`[SENT]: ICE candidate TO: ${this.peerId}`);
@@ -236,7 +237,7 @@ export class Peer {
             } else if (action instanceof UpdateStrokeWidthAction) {
                 e = new StrokeWidthChangedEvent(action.width, action.objectId, action.userId, action.timeStamp);
             }
-            this.send(JSON.stringify(event));
+            this.send(JSON.stringify(e));
         });
     }
 }
