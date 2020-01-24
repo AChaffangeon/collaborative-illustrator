@@ -6,7 +6,6 @@ import { StrokeWidthChangedEvent } from "../Events/StrokeWidthChangedEvent";
 import { FillChangedEvent } from "../Events/FillChangedEvent";
 import { TranslateShapeEvent } from "../Events/TranslateShapeEvent";
 import { DeleteShapeEvent } from "../Events/DeleteShapeEvent";
-import { DisconectEvent } from "../Events/DisconectEvent";
 
 
 /** Id of an Action. */
@@ -63,9 +62,7 @@ export class ActionManager {
         if (ActionManager.deletedShapes.includes(action.objectId)) {
             return;
         } else if (!ActionManager.createdShapes.includes(action.objectId)) {
-            if (action.type === "disconect") {
-              this.do(action);
-            }else if (action.type === "addShape") {
+            if (action.type === "addShape") {
                 this.doneActions.push(action);
                 this.do(action);
 
@@ -140,10 +137,6 @@ export class ActionManager {
         });
 
         EventManager.registerHandler("shapeDeleted", (e: DeleteShapeEvent) => {
-            this.manageActions(e.action);
-        });
-
-        EventManager.registerHandler("disconect", (e: DisconectEvent) => {
             this.manageActions(e.action);
         });
     }

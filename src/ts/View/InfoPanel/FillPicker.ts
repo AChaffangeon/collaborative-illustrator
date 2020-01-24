@@ -13,7 +13,7 @@ export class FillPicker {
         this.holderSelection = infoPanel.holderSelection
             .append("div")
                 .attr("id", "fill-picker")
-                .classed("picker", true);
+                .classed("info-panel-element", true);
         this.fill = "none";
         this.setupUI();
         this.setupInteraction();

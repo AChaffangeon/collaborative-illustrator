@@ -1,5 +1,4 @@
 import { Action, ActionManager } from "../Actions/ActionManager";
-import { DisconectEvent } from "../Events/DisconectEvent";
 
 /** Id of a personalized Event. */
 export type EventID = string;
@@ -16,12 +15,6 @@ export class EventManager {
     /** List of handlers registered per personalized event. */
     private static eventHandlers: Map<EventID, EventHandler<any>[]> = new Map();
     constructor() { }
-
-    static staticConstructor(): void {
-      window.onbeforeunload = () => {
-          EventManager.emit(new DisconectEvent(ActionManager.userId, ActionManager.getTimeStamp()));
-      };
-    }
 
     /**
      * Registers a handler for a personalized Event.
@@ -52,4 +45,3 @@ export class EventManager {
             });
     }
 }
-EventManager.staticConstructor();

@@ -14,7 +14,7 @@ export class StrokePicker {
         this.holderSelection = infoPanel.holderSelection
             .append("div")
                 .attr("id", "stroke-picker")
-                .classed("picker", true);
+                .classed("info-panel-element", true);
         this.stroke = "#000000";
         this.strokeWidth = 2;
         this.setupUI();

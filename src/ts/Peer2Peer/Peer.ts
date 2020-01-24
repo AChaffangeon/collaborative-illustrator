@@ -15,7 +15,8 @@ import { UpdateFillAction } from '../Actions/UpdateFillAction';
 import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
 import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
-import { DisconectEvent } from "../Events/DisconectEvent";
+import { PeerConnectEvent } from '../Events/PeerConnectEvent';
+import { PeerDisconnectEvent } from '../Events/PeerDisconnectEvent';
 
 
 const configuration = {
@@ -43,15 +44,15 @@ export class Peer {
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
-        this.peerId = "null";
+        this.peerId = `Peer-${Peer.index}`;
         this.setupColor();
         this.config();
 
     }
 
     setupColor(): void {
-      this.color = Peer.colorList[Peer.index];
-      Peer.index = (Peer.index + 1) % Peer.colorList.length;
+        this.color = Peer.colorList[Peer.index % Peer.colorList.length];
+        Peer.index = Peer.index + 1;
     }
 
     config(): void {
@@ -66,9 +67,13 @@ export class Peer {
             this.connection.onnegotiationneeded = () => {
                 console.log(`Create Local Description: ${this.signalingChannel.signalingChannel}`);
 
-                this.connection.createOffer().then((offer) => {
+                this.connection.createOffer()
+                .then((offer) => {
                     this.setLocalDescription(offer);
-                }).catch((e) => console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e));
+                })
+                .catch((e) => {
+                    console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e); 
+                });
             };
 
             this.dataChannel = this.connection.createDataChannel('chat');
@@ -98,10 +103,6 @@ export class Peer {
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
-                        if (this.peerId === "null") {
-                          this.peerId = msg.userId;
-                          PeerDisplay.addNewPeer(this.color, this.peerId);
-                        }
                         this.connection.addIceCandidate(msg.candidate);
                     }
                     break;
@@ -136,6 +137,7 @@ export class Peer {
             if (!this.isOfferer) {
                 this.sendCurrentState();
             }
+            EventManager.emit(new PeerConnectEvent(this.peerId, this.color));
         };
 
         this.dataChannel.onmessage = (event) => {
@@ -162,8 +164,8 @@ export class Peer {
                 } else if (msg.id === "shapeDeleted") {
                     let e = new DeleteShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
-                } else if (msg.id === "disconect") {
-                    let e = new DisconectEvent(msg.action.userId, msg.action.timeStamp);
+                } else if (msg.id === "peerDisconnect") {
+                    let e = new PeerDisconnectEvent(msg.userId);
                     EventManager.emit(e);
                 }
             }
@@ -174,42 +176,44 @@ export class Peer {
         this.dataChannel.send(msg);
     }
 
-    sendEvent(event: ActionEvent): void {
+    sendEvent(event: Event): void {
+        this.send(JSON.stringify(event));
+    }
+
+    sendActionEvent(event: ActionEvent): void {
         if (event.action.userId === ActionManager.userId) {
-            this.send(JSON.stringify(event));
+            this.sendEvent(event);
         }
     }
 
     setupEventHandler(): void {
-
         EventManager.registerHandler("shapeCreated", (event: ShapeCreatedEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
         EventManager.registerHandler("strokeChanged", (event: StrokeChangedEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
         EventManager.registerHandler("strokeWidthChanged", (event: StrokeWidthChangedEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
         EventManager.registerHandler("fillChanged", (event: FillChangedEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
         EventManager.registerHandler("translateShape", (event: TranslateShapeEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
         EventManager.registerHandler("shapeDeleted", (event: DeleteShapeEvent) => {
-            this.sendEvent(event);
+            this.sendActionEvent(event);
         });
 
-        EventManager.registerHandler("disconect", (event: DisconectEvent) => {
-            this.sendEvent(event);
+        window.addEventListener("beforeunload", () => {
+            this.sendEvent(new PeerDisconnectEvent(this.peerId));
         });
-
     }
 
     sendCurrentState(): void {

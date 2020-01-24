@@ -4,67 +4,60 @@ import { Shape } from "../Shapes/Shape";
 import { FillChangedEvent } from "../../Events/FillChangedEvent";
 import { ActionManager } from "../../Actions/ActionManager";
 import * as d3 from "d3-selection";
+import { PeerConnectEvent } from "../../Events/PeerConnectEvent";
+import { PeerDisconnectEvent } from "../../Events/PeerDisconnectEvent";
 
 interface PeerInfo { color: string; id: string; }
 
 export class PeerDisplay {
-
-    static holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
-    static svg: d3.Selection<SVGElement, any, any, any>;
-    static peerInfoList: PeerInfo[] = [];
+    holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
+    svg: d3.Selection<SVGElement, any, any, any>;
+    peerInfoList: PeerInfo[] = [];
 
     constructor(infoPanel: InfoPanel) {
-        PeerDisplay.holderSelection = infoPanel.holderSelection
+        this.holderSelection = infoPanel.holderSelection
             .append("div")
-                .attr("id", "peerList")
-                .classed("peerList", true);
-        PeerDisplay.setupUI();
-        PeerDisplay.svg = PeerDisplay.holderSelection.append("svg");
+                .attr("id", "peer-list")
+                .classed("info-panel-element", true);
 
-        PeerDisplay.redrawCircles();
+        this.setupUI();
+        this.setupEventHandlers();
     }
 
-    static addNewPeer(color: string, id: string): void {
-      let peer: PeerInfo = { color: color, id: id};
-      PeerDisplay.peerInfoList.push(peer);
-      PeerDisplay.redrawCircles();
+    addNewPeer(color: string, id: string): void {
+      this.holderSelection
+        .select(".body")
+            .append("div")
+                .attr("id", `peer-circle-${id}`)
+                .classed("peer-circle", true)
+                .style("border-color", color);
     }
 
-    static removePeer(id: string): void {
-      let cpt = 0;
-      for (let i of PeerDisplay.peerInfoList) {
-        if (PeerDisplay.peerInfoList[cpt].id === id) {
-            PeerDisplay.peerInfoList.splice(cpt, 1);
-          break;
+    removePeer(id: string): void {
+        console.log(id);
+        let circle = d3.select(`#peer-circle-${id}`);
+        if (!circle.empty()) {
+            circle.remove();
         }
-        cpt++;
-      }
-      PeerDisplay.redrawCircles();
     }
 
-    private static setupUI(): void {
-        PeerDisplay.holderSelection
+    private setupUI(): void {
+        this.holderSelection
             .append("div")
                 .classed("header", true)
-                .text("Other collaborators connected");
+                .text("Connected peers");
+        this.holderSelection
+            .append("div")
+                .classed("body", true);
     }
 
-    private static redrawCircles(): void {
-        let nbInLine = 0;
-        PeerDisplay.svg.remove();
-        PeerDisplay.svg = PeerDisplay.holderSelection.append("svg");
-        for (let peerInfo of PeerDisplay.peerInfoList) {
-          PeerDisplay.svg.append('circle')
-              .attr('cx', 30 + 40 * (nbInLine % 6))
-              .attr('cy', 20 + 40 * Math.floor(nbInLine / 6))
-              .attr('r', 15)
-              .attr('stroke', peerInfo.color)
-              .attr('fill', '#ffffff')
-              .attr("stroke-width", "3");
-              nbInLine++;
+    private setupEventHandlers(): void {
+        EventManager.registerHandler("peerConnect", (e: PeerConnectEvent) => {
+            this.addNewPeer(e.color, e.userId);
+        });
 
-        }
-
+        EventManager.registerHandler("peerDisconnect", (e: PeerDisconnectEvent) => {
+            this.removePeer(e.userId);
+        });
     }
-
 }

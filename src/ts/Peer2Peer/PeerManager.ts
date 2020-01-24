@@ -4,6 +4,8 @@ import { SignalingChannel } from "./SignalingChannel";
 import { ActionManager } from "../Actions/ActionManager";
 import { RoomServer } from "./roomServer";
 import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
+import { EventManager } from "../Events/EventManager";
+import { PeerDisconnectEvent } from "../Events/PeerDisconnectEvent";
 const io = require('socket.io-client');
 
 export class PeerManager {
@@ -14,8 +16,6 @@ export class PeerManager {
         this.roomServer = new RoomServer();
         this.setupServerListeners(actionManager);
     }
-
-
 
     setupServerListeners(actionManager: ActionManager): void {
         this.roomServer.register("newPeer", (data) => {

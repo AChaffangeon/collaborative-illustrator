@@ -234,20 +234,27 @@ body {
     margin-bottom: 10px;
 }
 
-/** Pickers **/
-.picker {
+/************** 
+Info Panel 
+**************/
+
+.info-panel-element {
     background-color: #3F4147;
     padding-bottom: 4px;
     min-height: 64px;
 }
 
-.picker .header {
+.info-panel-element .header {
     background-color: #2F3133;
     color: white;
     font-size: 20px;
     margin-bottom: 6px;
     padding: 4px;
 }
+
+/************** 
+Pickers 
+**************/
 
 #stroke-picker input {
     margin-left: 9px;
@@ -276,16 +283,20 @@ body {
     right: 14px;
 }
 
-.peerList {
-    background-color: #3F4147;
-    padding-bottom: 4px;
-    min-height: 100px;
+/*******************
+peer-list
+*******************/
+#peer-list .body {
+    display: flex;
+    margin: 2px;
 }
 
-.peerList .header {
-    background-color: #2F3133;
-    color: white;
-    font-size: 20px;
-    margin-bottom: 6px;
-    padding: 4px;
+.peer-circle {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    background: white;
 }
