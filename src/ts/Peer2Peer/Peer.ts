@@ -168,7 +168,7 @@ export class Peer {
                     let e = new DeleteShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "peerDisconnect") {
-                    let e = new PeerDisconnectEvent(msg.userId);
+                    let e = new PeerDisconnectEvent(this.peerId);
                     EventManager.emit(e);
                 }
             }
