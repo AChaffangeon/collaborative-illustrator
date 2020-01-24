@@ -34,7 +34,7 @@ export class PeerDisplay {
     }
 
     removePeer(id: string): void {
-        console.log(id);
+        console.log("Peer disconnected: id");
         let circle = d3.select(`#peer-circle-${id}`);
         if (!circle.empty()) {
             circle.remove();

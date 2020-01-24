@@ -58,21 +58,21 @@ export class Peer {
     config(): void {
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
-                console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`);
+                console.log(`[SENT]: ICE candidate TO: ${this.peerId}`);
                 this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate, userId: ActionManager.userId });
             }
         };
 
         if (this.isOfferer) {
             this.connection.onnegotiationneeded = () => {
-                console.log(`Create Local Description: ${this.signalingChannel.signalingChannel}`);
+                console.log(`Create Local Description: ${this.peerId}`);
 
                 this.connection.createOffer()
                 .then((offer) => {
                     this.setLocalDescription(offer);
                 })
                 .catch((e) => {
-                    console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e); 
+                    console.log(`Error negotiations with: ${this.peerId}`, e); 
                 });
             };
 
@@ -91,15 +91,15 @@ export class Peer {
     setLocalDescription(description: RTCSessionDescriptionInit): void {
         this.connection.setLocalDescription(description)
             .then(() => {
-                console.log(`[SENT] Local description TO: ${this.signalingChannel.signalingChannel}`);
+                console.log(`[SENT] Local description TO: ${this.peerId}`);
                 this.signalingChannel.send({ id: "SDP", description: this.connection.localDescription });
             })
-            .catch((e) => console.log(`Error set local description with: ${this.signalingChannel.signalingChannel}: `, e));
+            .catch((e) => console.log(`Error set local description with: ${this.peerId}: `, e));
     }
 
     listenToMsg(): void {
         let onMsg = (msg) => {
-            console.log(`[Received]: ${msg.id} FROM ${this.signalingChannel.signalingChannel}`);
+            console.log(`[Received]: ${msg.id} FROM ${this.peerId}`);
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
@@ -118,7 +118,7 @@ export class Peer {
                                     .catch((e) => console.log("Error create answer: ", e));
                             }
                         })
-                        .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.signalingChannel.signalingChannel));
+                        .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.peerId));
                     break;
 
                 default:
@@ -131,7 +131,7 @@ export class Peer {
 
     setupDataChannel(): void {
         this.dataChannel.onopen = (event) => {
-            console.log(`Datachannel is open with: ${this.signalingChannel.signalingChannel}`);
+            console.log(`Datachannel is open with: ${this.peerId}`);
             this.signalingChannel.close();
             this.setupEventHandler();
             if (!this.isOfferer) {
