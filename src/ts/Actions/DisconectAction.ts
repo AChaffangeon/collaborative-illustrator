@@ -1,6 +1,6 @@
 import { Action, ActionManager } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
-import {PeerDisplay} from "../View/InfoPanel/PeerDisplay"
+import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
 
 
 export class DisconectAction implements Action {

@@ -1,5 +1,5 @@
 import { Action, ActionManager } from "../Actions/ActionManager";
-import {DisconectEvent} from "../Events/DisconectEvent";
+import { DisconectEvent } from "../Events/DisconectEvent";
 
 /** Id of a personalized Event. */
 export type EventID = string;
@@ -15,11 +15,10 @@ export type EventHandler<E extends Event> = (e: Event) => void;
 export class EventManager {
     /** List of handlers registered per personalized event. */
     private static eventHandlers: Map<EventID, EventHandler<any>[]> = new Map();
-    constructor() {}
+    constructor() { }
 
-    static staticConstructor() {
-      window.onbeforeunload = sendEvent;
-      function sendEvent(){
+    static staticConstructor(): void {
+      window.onbeforeunload = () => {
           EventManager.emit(new DisconectEvent(ActionManager.userId, ActionManager.getTimeStamp()));
       };
     }

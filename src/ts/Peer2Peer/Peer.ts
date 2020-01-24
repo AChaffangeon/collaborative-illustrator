@@ -15,7 +15,7 @@ import { UpdateFillAction } from '../Actions/UpdateFillAction';
 import { UpdateStrokeAction } from '../Actions/UpdateStrokeAction';
 import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
-import {DisconectEvent} from "../Events/DisconectEvent";
+import { DisconectEvent } from "../Events/DisconectEvent";
 
 
 const configuration = {
@@ -27,6 +27,8 @@ const configuration = {
 
 /** Based on the code from https://github.com/ScaleDrone/webrtc-text-chat-tutorial/blob/master/script.js */
 export class Peer {
+    static colorList: string[] = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"];
+    static index: number = 0;
     connection: RTCPeerConnection;
     signalingChannel: SignalingChannel;
     dataChannel: RTCDataChannel;
@@ -35,8 +37,6 @@ export class Peer {
     peerId: string;
     peerDisplay: PeerDisplay;
     color: string;
-    static colorList: string[] = ["#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7","#000000"];
-    static index: number = 0;
 
     constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
@@ -49,9 +49,9 @@ export class Peer {
 
     }
 
-    setupColor(): void{
+    setupColor(): void {
       this.color = Peer.colorList[Peer.index];
-      Peer.index = (Peer.index+1)%Peer.colorList.length;
+      Peer.index = (Peer.index + 1) % Peer.colorList.length;
     }
 
     config(): void {
@@ -98,9 +98,9 @@ export class Peer {
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
-                        if(this.peerId === "null"){
+                        if (this.peerId === "null") {
                           this.peerId = msg.userId;
-                          PeerDisplay.addNewPeer(this.color,this.peerId);
+                          PeerDisplay.addNewPeer(this.color, this.peerId);
                         }
                         this.connection.addIceCandidate(msg.candidate);
                     }
