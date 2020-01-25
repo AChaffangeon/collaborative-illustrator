@@ -147,7 +147,7 @@ export class SelectTool extends Tool {
     }
 
     keyUp(e: KeyboardEvent, canvas: Canvas): void {
-        if (e.code === "Delete" || (e.code === "KeyD" && e.ctrlKey)) {
+        if (e.code === "Delete" || (e.code === "KeyD" && e.ctrlKey) || (e.code === "KeyD" && e.altKey)) {
             let userId = ActionManager.userId;
             let timeStamp = ActionManager.getTimeStamp();
 

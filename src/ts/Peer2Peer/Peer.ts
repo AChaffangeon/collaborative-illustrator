@@ -59,16 +59,17 @@ export class Peer {
     }
 
     config(): void {
+        console.log(`Connect TO: ${this.peerId}`);
         this.connection.onicecandidate = (event) => {
             if (event.candidate) {
-                console.log(`[SENT]: ICE candidate TO: ${this.signalingChannel.signalingChannel}`);
+                console.log(`[SENT]: ICE candidate TO: ${this.peerId}`);
                 this.signalingChannel.send({ id: "ICECandidate", candidate: event.candidate, userId: ActionManager.userId });
             }
         };
 
         if (this.isOfferer) {
             this.connection.onnegotiationneeded = () => {
-                console.log(`Create Local Description: ${this.signalingChannel.signalingChannel}`);
+                console.log(`Create Local Description: ${this.peerId}`);
 
                 this.connection.createOffer()
                 .then((offer) => {
@@ -94,15 +95,15 @@ export class Peer {
     setLocalDescription(description: RTCSessionDescriptionInit): void {
         this.connection.setLocalDescription(description)
             .then(() => {
-                console.log(`[SENT] Local description TO: ${this.signalingChannel.signalingChannel}`);
+                console.log(`[SENT] Local description TO: ${this.peerId}`);
                 this.signalingChannel.send({ id: "SDP", description: this.connection.localDescription });
             })
-            .catch((e) => console.log(`Error set local description with: ${this.signalingChannel.signalingChannel}: `, e));
+            .catch((e) => console.log(`Error set local description with: ${this.peerId}: `, e));
     }
 
     listenToMsg(): void {
         let onMsg = (msg) => {
-            console.log(`[Received]: ${msg.id} FROM ${this.signalingChannel.signalingChannel}`);
+            console.log(`[Received]: ${msg.id} FROM ${this.peerId}`);
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
@@ -124,7 +125,7 @@ export class Peer {
                                     .catch((e) => console.log("Error create answer: ", e));
                             }
                         })
-                        .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.signalingChannel.signalingChannel));
+                        .catch((e) => console.log("Error set Remote description: ", e, msg, this.connection, this.peerId));
                     break;
 
                 default:
@@ -137,7 +138,7 @@ export class Peer {
 
     setupDataChannel(): void {
         this.dataChannel.onopen = (event) => {
-            console.log(`Datachannel is open with: ${this.signalingChannel.signalingChannel}`);
+            console.log(`Datachannel is open with: ${this.peerId}`);
             this.signalingChannel.close();
             this.setupEventHandler();
             if (!this.isOfferer) {
@@ -153,6 +154,9 @@ export class Peer {
                     let shape = new FreeForm();
                     shape.addPoints(msg.action.shape.path);
                     shape.id = msg.action.objectId;
+                    shape.stroke = msg.action.shape.stroke;
+                    shape.strokeWidth = msg.action.shape.strokeWidth;
+                    shape.fill = msg.action.shape.fill;
                     let e = new ShapeCreatedEvent(shape, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "strokeChanged") {
@@ -171,7 +175,7 @@ export class Peer {
                     let e = new DeleteShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 } else if (msg.id === "peerDisconnect") {
-                    let e = new PeerDisconnectEvent(msg.userId);
+                    let e = new PeerDisconnectEvent(this.peerId);
                     EventManager.emit(e);
                 } else if (msg.id === "selectShape") {
                     let e = new SelectShapeEvent(msg.action.objectId,msg.action.userId, msg.action.timeStamp);
@@ -257,7 +261,7 @@ export class Peer {
             } else if (action instanceof UnselectShapeAction) {
                 e = new UnselectShapeEvent(action.objectId, action.userId, action.timeStamp);
             }
-            this.send(JSON.stringify(event));
+            this.send(JSON.stringify(e));
         });
     }
 }

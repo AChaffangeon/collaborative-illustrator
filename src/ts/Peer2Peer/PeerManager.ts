@@ -19,12 +19,10 @@ export class PeerManager {
 
     setupServerListeners(actionManager: ActionManager): void {
         this.roomServer.register("newPeer", (data) => {
-            console.log("new user:", data.signalingChannel);
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
             new Peer(sc, actionManager);
         });
         this.roomServer.register("connectToPeer", (data) => {
-            console.log("connect to user:", data.signalingChannel);
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
             new Peer( sc, actionManager, true);
 
