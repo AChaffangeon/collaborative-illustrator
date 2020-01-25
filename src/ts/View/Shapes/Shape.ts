@@ -1,8 +1,13 @@
 import { Canvas } from "../Canvas";
 import { Point, Helpers } from "../../helpers";
 import * as d3 from "d3-selection";
-import { ActionManager } from "../../Actions/ActionManager";
+import { Action, ActionManager } from "../../Actions/ActionManager";
+import { EventManager } from "../../Events/EventManager";
+import { SelectShapeEvent } from "../../Events/SelectShapeEvent";
+import { UnselectShapeEvent } from "../../Events/UnselectShapeEvent";
+import { PeerDisplay } from "../InfoPanel/PeerDisplay";
 import { Numeric } from "d3";
+
 
 let shapeNumber = 0;
 
@@ -14,6 +19,7 @@ export abstract class Shape {
     strokeWidth: number;
     fill: string;
     translate: { dx: number; dy: number; };
+    selectList: string[];
 
     constructor() {
         this.id = ActionManager.userId + "-S_" + shapeNumber.toString();
@@ -26,6 +32,7 @@ export abstract class Shape {
         this.translate = { dx: 0, dy: 0 };
 
         this.holderSelection = undefined;
+        this.selectList = [];
     }
 
     addToCanvas(canvas: Canvas): void {
@@ -71,21 +78,53 @@ export abstract class Shape {
     }
 
     select(): void {
+        EventManager.emit(new SelectShapeEvent(this.id, ActionManager.userId, ActionManager.getTimeStamp()));
         this.holderSelection.classed("selected", true);
+        /*this.holderSelection.select("rect").remove();
+
         let bbox = this.holderSelection.node().getBBox();
         this.holderSelection.append("rect")
             .attr("x", bbox.x - 5)
             .attr("y", bbox.y - 5)
             .attr("width", bbox.width + 10)
             .attr("height", bbox.height + 10)
-            .classed("selection-rect", true);
+            .classed("selection-rect", true);*/
+    }
+
+    selectbYId(peerId: string): void {
+        this.selectList.push(peerId);
+        if(this.holderSelection.classed("selected")) return;
+        let color = PeerDisplay.getColorById(peerId);
+        this.holderSelection.select("rect").remove();
+        let bbox = this.holderSelection.node().getBBox();
+        this.holderSelection.append("rect")
+            .attr("stroke", color)
+            .attr("x", bbox.x - 5)
+            .attr("y", bbox.y - 5)
+            .attr("width", bbox.width + 10)
+            .attr("height", bbox.height + 10)
+            .classed("selection-rect-byId", true);
     }
 
     unselect(): void {
+        EventManager.emit(new UnselectShapeEvent(this.id, ActionManager.userId, ActionManager.getTimeStamp()));
         if (this.holderSelection) {
             this.holderSelection.classed("selected", false);
-            this.holderSelection.select("rect").remove();
         }
+    }
+
+    unselectbyId(peerId: string): void {
+        this.selectList = this.selectList.filter(obj => obj !== peerId);
+        let color = PeerDisplay.getColorById(this.selectList[this.selectList.length-1]);
+        this.holderSelection.select("rect").remove();
+        let bbox = this.holderSelection.node().getBBox();
+        this.holderSelection.append("rect")
+            .attr("stroke", color)
+            .attr("x", bbox.x - 5)
+            .attr("y", bbox.y - 5)
+            .attr("width", bbox.width + 10)
+            .attr("height", bbox.height + 10)
+            .classed("selection-rect-byId", true);
     }
 
     static isShape(d3Selection: d3.Selection<any, any, any, any>): boolean {

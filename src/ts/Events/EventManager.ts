@@ -25,18 +25,15 @@ export class EventManager {
         if (!EventManager.eventHandlers.has(eventId)) {
             EventManager.eventHandlers.set(eventId, []);
         }
-
         EventManager.eventHandlers.get(eventId).push(eventHandler);
     }
 
     /**
      * Call each handler registered for a personalized Event.
-     * @param event Personalized event triggered.
+     * @param event Personalized event tri
      */
     static emit(event: Event): void {
         if (!EventManager.eventHandlers.has(event.id)) {
-          console.log(event.id, EventManager.eventHandlers);
-
             return;
         }
         EventManager.eventHandlers.get(event.id)
