@@ -96,6 +96,7 @@ export class SelectTool extends Tool {
 
             this.selectedShapes.forEach((s) => {
                 if (s !== this.shape) {
+                    translate = s.getTranslate();
                     EventManager.emit(new TranslateShapeEvent(translate, s.id, userId, timeStamp));
                 }
             });
