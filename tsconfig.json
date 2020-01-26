@@ -8,6 +8,11 @@
       "alwaysStrict": true,
       "declaration": false
   },
+  "typedocOptions": {
+    "mode": "file",
+    "out": "docs",
+    "name": "The Collaborative Illustrator — Documentation"
+  },
   "compileOnSave": false,
   "include": [
       "src/ts/**/*"

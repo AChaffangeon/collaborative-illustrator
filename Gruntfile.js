@@ -9,6 +9,12 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
 
+    // Command line tasks
+    // They allow to run external commands (as in a terminal).
+    exec: {
+      typedoc: "npx typedoc src/ts"
+    },
+
     // Typescript task
     // It compiles each TypeScript souce file into a JavaScript file.
     ts: {
@@ -47,8 +53,9 @@ module.exports = function (grunt) {
   /***************************************************************************/
   /* npm plugin loading
   /***************************************************************************/
-
+  grunt.loadNpmTasks("grunt-exec");
   grunt.loadNpmTasks("grunt-ts");
+  grunt.loadNpmTasks("grunt-tslint");
   grunt.loadNpmTasks("grunt-browserify");
 
   /***************************************************************************/
@@ -71,6 +78,11 @@ module.exports = function (grunt) {
     }
   );
 
+  grunt.registerTask("lint",
+    "Check the style of the Typescript sources for the specified rules.",
+    ["tslint"]
+  );
+
   grunt.registerTask("compile",
     "Compile Typescript sources (using browserify) into the build directory.",
     ["ts", "browserify"]
@@ -78,7 +90,12 @@ module.exports = function (grunt) {
 
   grunt.registerTask("build",
     "Copy static files and compile Typescript sources into the build directory.",
-    ["copy-static-files", "compile"]
+    ["copy-static-files", "lint", "compile"]
+  );
+
+  grunt.registerTask("make-doc",
+    "Generate the documentation of the Typescript sources in the docs directory.",
+    "exec:typedoc"
   );
 
   grunt.registerTask("default", "build");
