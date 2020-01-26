@@ -27,13 +27,13 @@ export class FreeForm extends Shape {
 
     addToCanvas(canvas: Canvas): void {
         super.addToCanvas(canvas);
-        this.pathSelection = this.holderSelection.append("path");
+        this.pathSelection = this.shapeSelection.append("path");
         this.repaint();
     }
 
     repaint(): void {
         super.repaint();
-        if (this.holderSelection === undefined) {
+        if (this.shapeSelection === undefined) {
             return;
         }
         if (this.path.length < 2) {

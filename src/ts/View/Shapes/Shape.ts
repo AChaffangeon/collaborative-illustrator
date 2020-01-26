@@ -2,11 +2,6 @@ import { Canvas } from "../Canvas";
 import { Point } from "../../helpers";
 import * as d3 from "d3-selection";
 import { ActionManager } from "../../Actions/ActionManager";
-import { EventManager } from "../../Events/EventManager";
-import { SelectShapeEvent } from "../../Events/SelectShapeEvent";
-import { UnselectShapeEvent } from "../../Events/UnselectShapeEvent";
-import { PeerDisplay } from "../InfoPanel/PeerDisplay";
-
 
 let shapeNumber = 0;
 
@@ -14,11 +9,11 @@ let shapeNumber = 0;
 export abstract class Shape {
     id: string;
     holderSelection: d3.Selection<SVGGElement, any, any, any>;
+    shapeSelection: d3.Selection<SVGGElement, any, any, any>;
     stroke: string;
     strokeWidth: number;
     fill: string;
     translate: { dx: number; dy: number; };
-    numberSelection: number;
 
     constructor() {
         this.id = ActionManager.userId + "-S_" + shapeNumber.toString();
@@ -31,18 +26,20 @@ export abstract class Shape {
         this.translate = { dx: 0, dy: 0 };
 
         this.holderSelection = undefined;
-        this.numberSelection = 0;
+        this.shapeSelection = undefined;
     }
 
     addToCanvas(canvas: Canvas): void {
-        this.holderSelection = canvas.svgSelection.append("g").classed("shape", true);
+        this.holderSelection = canvas.svgSelection.append("g").classed("shape-holder", true);
         this.holderSelection.datum(this);
+        this.shapeSelection = this.holderSelection.append("g").classed("shape", true);
         canvas.shapes.push(this);
     }
 
     removeFromCanvas(canvas: Canvas): void {
         this.holderSelection.remove();
         this.holderSelection = undefined;
+        this.shapeSelection = undefined;
 
         canvas.shapes = canvas.shapes.filter((value, index, arr) => {
             return value !== this;
@@ -69,7 +66,7 @@ export abstract class Shape {
      * @returns true if picked
      */
     isPicked(pt: Point): boolean {
-        let bbox = this.holderSelection.node().getBBox();
+        let bbox = this.shapeSelection.node().getBBox();
         return pt.x > bbox.x + this.translate.dx &&
                pt.x < bbox.x + this.translate.dx + bbox.width &&
                pt.y > bbox.y + this.translate.dy &&
@@ -77,19 +74,12 @@ export abstract class Shape {
     }
 
     select(peerId: string, color: string): void {
-        this.numberSelection += 1;
-        let offset = this.numberSelection * 2;
-
-        let bbox = this.holderSelection.node().getBBox();
-
+        this.holderSelection.classed("selected", true);
         this.holderSelection.append("rect")
             .attr("id", `peer-selection-${peerId}`)
             .attr("stroke", color)
-            .attr("x", bbox.x - 5 - offset)
-            .attr("y", bbox.y - 5 - offset)
-            .attr("width", bbox.width + 10 + 2 * offset)
-            .attr("height", bbox.height + 10 + 2 * offset)
             .classed("selection-rect", true);
+        this.redrawRectangleSelection();
     }
 
     unselect(peerId: string): void {
@@ -97,9 +87,21 @@ export abstract class Shape {
             let selection = d3.select(`#peer-selection-${peerId}`);
             if (!selection.empty()) {
                 selection.remove();
-                this.numberSelection -= 1;
+                this.redrawRectangleSelection();
+
+                let isUnselect = this.holderSelection.selectAll("rect").empty();
+                this.holderSelection.classed("selected", !isUnselect);
             }
         }
+    }
+
+    private redrawRectangleSelection(): void {
+        let bbox = this.shapeSelection.node().getBBox();
+        this.holderSelection.selectAll("rect")
+            .attr("x", (_, i) => { return bbox.x - 5 - 4 * i; })
+            .attr("y", (_, i) => { return bbox.y - 5 - 4 * i; })
+            .attr("width", (_, i) => { return bbox.width + 10 + 8 * i; })
+            .attr("height", (_, i) => { return bbox.height + 10 + 8 * i; });
     }
 
     static isShape(d3Selection: d3.Selection<any, any, any, any>): boolean {
@@ -121,7 +123,7 @@ export abstract class Shape {
 
     static getSelectedShapes(): Shape[] {
         let selectedShapes = [];
-        d3.selectAll(".shape.selected").each(function(): void {
+        d3.selectAll(".shape-holder.selected").each(function(): void {
             selectedShapes.push(Shape.getShape(d3.select(this)));
         });
         return selectedShapes;
