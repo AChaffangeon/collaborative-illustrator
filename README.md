@@ -1,4 +1,4 @@
-# The Collaborative Illustrator [![Build Status](https://travis-ci.com/AChaffangeon/collaborative-illustrator.svg?branch=master)](https://travis-ci.com/AChaffangeon/collaborative-illustrator)
+# The Collaborative Illustrator [![Build Status][https://travis-ci.com/AChaffangeon/collaborative-illustrator.svg?branch=master](https://travis-ci.com/AChaffangeon/collaborative-illustrator)
 
 The Collaborative Illustrator is a simplified illustrator allowing collaboration between peers with WebRTC.
 
