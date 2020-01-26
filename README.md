@@ -3,6 +3,7 @@
 The Collaborative Illustrator is a simplified illustrator allowing collaboration between peers with WebRTC.
 
 ▶️ [**Collaborative Illustrator web application**](https://achaffangeon.github.io/collaborative-illustrator/)
+
 📖 [**Collaborative Illustrator Documentation**](https://achaffangeon.github.io/collaborative-illustrator/docs/)
 
 ## Building process
