@@ -7,6 +7,7 @@ import { Helpers } from "../../../helpers";
 import { EventManager } from "../../../Events/EventManager";
 import { TranslateShapeEvent } from "../../../Events/TranslateShapeEvent";
 import { DeleteShapeEvent } from "../../../Events/DeleteShapeEvent";
+import { SelectShapeEvent } from "../../../Events/SelectShapeEvent";
 import { ActionManager } from "../../../Actions/ActionManager";
 
 export class SelectTool extends Tool {
@@ -136,6 +137,7 @@ export class SelectTool extends Tool {
         });
         shape.unselect();
     }
+
 
     unselectAllShapes(): void {
         let shapeList = this.selectedShapes.slice();

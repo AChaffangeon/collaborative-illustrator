@@ -134,7 +134,12 @@ body {
 
 .selection-rect {
     fill: none;
-    stroke: blue;
+    stroke: #56B4E9;
+    stroke-width: 2px;
+}
+
+.selection-rect-byId {
+    fill: none;
     stroke-width: 2px;
 }
 
@@ -234,8 +239,8 @@ body {
     margin-bottom: 10px;
 }
 
-/************** 
-Info Panel 
+/**************
+Info Panel
 **************/
 
 .info-panel-element {
@@ -252,8 +257,8 @@ Info Panel
     padding: 4px;
 }
 
-/************** 
-Pickers 
+/**************
+Pickers
 **************/
 
 #stroke-picker input {
@@ -299,4 +304,15 @@ peer-list
     border-width: 3px;
     border-style: solid;
     background: white;
+    margin-left: 5px;
+}
+
+.main-circle {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+    border-style: solid;
+    background: #555555;
+
 }

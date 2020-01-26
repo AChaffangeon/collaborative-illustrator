@@ -12,7 +12,7 @@ interface PeerInfo { color: string; id: string; }
 export class PeerDisplay {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
     svg: d3.Selection<SVGElement, any, any, any>;
-    peerInfoList: PeerInfo[] = [];
+    static peerInfoList: PeerInfo[] = [];
 
     constructor(infoPanel: InfoPanel) {
         this.holderSelection = infoPanel.holderSelection
@@ -22,23 +22,42 @@ export class PeerDisplay {
 
         this.setupUI();
         this.setupEventHandlers();
+        this.addMainPeer();
+    }
+
+    addMainPeer(): void {
+      PeerDisplay.peerInfoList.push(<PeerInfo>{color:"#56B4E9",id:ActionManager.userId});
+      this.holderSelection
+        .select(".body")
+            .append("div")
+                .attr("id", ActionManager.userId)
+                .classed("main-circle", true)
+                .style("border-color", "#56B4E9")
+
     }
 
     addNewPeer(color: string, id: string): void {
+      PeerDisplay.peerInfoList.push(<PeerInfo>{color:color,id:id});
       this.holderSelection
         .select(".body")
             .append("div")
                 .attr("id", `peer-circle-${id}`)
                 .classed("peer-circle", true)
-                .style("border-color", color);
+                .style("border-color", color)
     }
 
     removePeer(id: string): void {
-        console.log("Peer disconnected: id");
         let circle = d3.select(`#peer-circle-${id}`);
         if (!circle.empty()) {
             circle.remove();
         }
+    }
+
+    static getColorById(id: string){
+      for(let peerInfo of PeerDisplay.peerInfoList){
+        if(peerInfo.id===id)return peerInfo.color;
+      }
+      return "null;"
     }
 
     private setupUI(): void {

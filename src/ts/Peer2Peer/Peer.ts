@@ -17,6 +17,10 @@ import { UpdateStrokeWidthAction } from '../Actions/UpdateStrokeWidthAction';
 import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
 import { PeerConnectEvent } from '../Events/PeerConnectEvent';
 import { PeerDisconnectEvent } from '../Events/PeerDisconnectEvent';
+import { SelectShapeEvent } from '../Events/SelectShapeEvent';
+import { SelectShapeAction } from '../Actions/SelectShapeAction';
+import { UnselectShapeEvent } from '../Events/UnselectShapeEvent';
+import { UnselectShapeAction } from '../Actions/UnselectShapeAction';
 
 
 const configuration = {
@@ -28,23 +32,22 @@ const configuration = {
 
 /** Based on the code from https://github.com/ScaleDrone/webrtc-text-chat-tutorial/blob/master/script.js */
 export class Peer {
-    static colorList: string[] = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"];
+    static colorList: string[] = ["#E69F00", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"];
     static index: number = 0;
     connection: RTCPeerConnection;
     signalingChannel: SignalingChannel;
     dataChannel: RTCDataChannel;
     isOfferer: boolean;
     actionManager: ActionManager;
-    peerId: string;
     peerDisplay: PeerDisplay;
     color: string;
+    peerId: string = "null";
 
     constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
-        this.peerId = `Peer-${Peer.index}`;
         this.setupColor();
         this.config();
 
@@ -73,7 +76,7 @@ export class Peer {
                     this.setLocalDescription(offer);
                 })
                 .catch((e) => {
-                    console.log(`Error negotiations with: ${this.peerId}`, e); 
+                    console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e);
                 });
             };
 
@@ -104,7 +107,10 @@ export class Peer {
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
-                        this.connection.addIceCandidate(msg.candidate);
+                      if(this.peerId === "null"){
+                         this.peerId = msg.userId;
+                       }
+                      this.connection.addIceCandidate(msg.candidate);
                     }
                     break;
 
@@ -171,6 +177,12 @@ export class Peer {
                 } else if (msg.id === "peerDisconnect") {
                     let e = new PeerDisconnectEvent(this.peerId);
                     EventManager.emit(e);
+                } else if (msg.id === "selectShape") {
+                    let e = new SelectShapeEvent(msg.action.objectId,msg.action.userId, msg.action.timeStamp);
+                    EventManager.emit(e);
+                } else if (msg.id === "unselectShape") {
+                    let e = new UnselectShapeEvent(msg.action.objectId,msg.action.userId, msg.action.timeStamp);
+                    EventManager.emit(e);
                 }
             }
         };
@@ -215,8 +227,16 @@ export class Peer {
             this.sendActionEvent(event);
         });
 
+        EventManager.registerHandler("selectShape", (event: SelectShapeEvent) => {
+            this.sendActionEvent(event);
+        });
+
+        EventManager.registerHandler("unselectShape", (event: UnselectShapeEvent) => {
+            this.sendActionEvent(event);
+        });
+
         window.addEventListener("beforeunload", () => {
-            this.sendEvent(new PeerDisconnectEvent(this.peerId));
+            this.sendEvent(new PeerDisconnectEvent(ActionManager.userId));
         });
     }
 
@@ -236,6 +256,10 @@ export class Peer {
                 e = new StrokeChangedEvent(action.color, action.objectId, action.userId, action.timeStamp);
             } else if (action instanceof UpdateStrokeWidthAction) {
                 e = new StrokeWidthChangedEvent(action.width, action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof SelectShapeAction) {
+                e = new SelectShapeEvent(action.objectId, action.userId, action.timeStamp);
+            } else if (action instanceof UnselectShapeAction) {
+                e = new UnselectShapeEvent(action.objectId, action.userId, action.timeStamp);
             }
             this.send(JSON.stringify(e));
         });
