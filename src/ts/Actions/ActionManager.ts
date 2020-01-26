@@ -43,6 +43,11 @@ export class ActionManager {
         action.undo(this.canvas);
     }
 
+    /**
+     * Returns -1 if the action a has a timeStamp below the b action or if it's id is below, if not return 1
+     * @param a first action that will be compared
+     * @param b second action that will be compared
+     */
     rankActions(a: Action, b: Action): number {
 
         let uIdNumA = parseFloat(a.userId.replace(/[^0-9]/g, ""));
@@ -56,6 +61,13 @@ export class ActionManager {
             return 1;
         }
     }
+
+    /**
+     * Manage the execution an action that has been received and add it to the doneAction list
+     * if the first action is executed on a not existing shape, add it to the queue list
+     * if an action is in concurrency with a previous one, execute the "promote" function
+     * @param action action that just arrived and hasn't been processed yet
+     */
 
     manageActions(action: Action): void {
         if (ActionManager.deletedShapes.includes(action.objectId)) {
@@ -87,6 +99,12 @@ export class ActionManager {
         this.update(action);
     }
 
+    /**
+     * Manage a problem of concurrency due to a new action, by undoing action that should be executed
+     * after the new function, and then re executing all of them in the correct order.
+     * @param action the new action, in concurrency with the previous ones
+     */
+
     promote(action: Action): void {
         let concurrentActions = [];
 
@@ -110,6 +128,10 @@ export class ActionManager {
         }
     }
 
+    /**
+      * set the time stamp to the max between the current time stamp and the last time stamp received from a peer
+     * @param action the new action that just has been executed
+     */
     update(action: Action): void {
         ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
      }

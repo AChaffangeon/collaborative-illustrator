@@ -5,7 +5,10 @@ import * as d3 from "d3-selection";
 import { PeerConnectEvent } from "../../Events/PeerConnectEvent";
 import { PeerDisconnectEvent } from "../../Events/PeerDisconnectEvent";
 
+/** An interface to store the id of a peer, and its associated color. */
 interface PeerInfo { color: string; id: string; }
+
+/** A class to display the list of all peer conected on the room. */
 
 export class PeerDisplay {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
@@ -22,6 +25,11 @@ export class PeerDisplay {
         this.addMainPeer();
     }
 
+
+
+    /**
+     * Add in the list, a circle corresponding to the user.
+     */
     addMainPeer(): void {
       this.holderSelection
         .select(".body")
@@ -31,6 +39,9 @@ export class PeerDisplay {
                 .style("border-color", "#56B4E9");
     }
 
+    /**
+     * Add in the list, a circle corresponding to a new peer.
+     */
     addNewPeer(color: string, id: string): void {
       this.holderSelection
         .select(".body")
@@ -39,7 +50,9 @@ export class PeerDisplay {
                 .classed("peer-circle", true)
                 .style("border-color", color);
     }
-
+    /**
+     * Remove in the list, a circle corresponding to a disconected peer. 
+     */
     removePeer(id: string): void {
         let circle = d3.select(`#peer-circle-${id}`);
         if (!circle.empty()) {

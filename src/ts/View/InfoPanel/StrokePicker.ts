@@ -5,6 +5,7 @@ import { StrokeChangedEvent } from "../../Events/StrokeChangedEvent";
 import { StrokeWidthChangedEvent } from "../../Events/StrokeWidthChangedEvent";
 import { ActionManager } from "../../Actions/ActionManager";
 
+
 export class StrokePicker {
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
     stroke: string;
@@ -63,7 +64,7 @@ export class StrokePicker {
                 let v = (this.holderSelection.select("#stroke-width-text-input").node() as HTMLInputElement).value;
                 this.updateStrokeWidth(parseInt(v));
             });
-        
+
         this.holderSelection.select("input[type='range']")
             .on("change", () => {
                 let v = (this.holderSelection.select("input[type='range']").node() as HTMLInputElement).value;
