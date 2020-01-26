@@ -1,9 +1,5 @@
 import { RoomServer } from "./roomServer";
 
-const io = require('socket.io-client');
-
-interface MSG { id: string; }
-
 export class SignalingChannel {
     // tslint:disable-next-line: typedef
     socket: RoomServer;

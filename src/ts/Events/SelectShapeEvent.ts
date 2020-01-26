@@ -5,8 +5,7 @@ export class SelectShapeEvent implements ActionEvent {
     id: string = "selectShape";
     action: SelectShapeAction;
 
-    constructor(shapeId: string, userId: string, timeStamp: number) {
-        this.action = new SelectShapeAction(shapeId, userId, timeStamp);
-
+    constructor(shapeId: string, userId: string, timeStamp: number, color: string) {
+        this.action = new SelectShapeAction(shapeId, userId, timeStamp, color);
     }
 }

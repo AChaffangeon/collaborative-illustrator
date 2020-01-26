@@ -41,13 +41,14 @@ export class Peer {
     actionManager: ActionManager;
     peerDisplay: PeerDisplay;
     color: string;
-    peerId: string = "null";
+    peerId: string;
 
     constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
+        this.peerId = signalingChannel.signalingChannel;
         this.setupColor();
         this.config();
 
@@ -107,9 +108,6 @@ export class Peer {
             switch (msg.id) {
                 case "ICECandidate":
                     if (msg.candidate) {
-                      if(this.peerId === "null"){
-                         this.peerId = msg.userId;
-                       }
                       this.connection.addIceCandidate(msg.candidate);
                     }
                     break;
@@ -178,10 +176,10 @@ export class Peer {
                     let e = new PeerDisconnectEvent(this.peerId);
                     EventManager.emit(e);
                 } else if (msg.id === "selectShape") {
-                    let e = new SelectShapeEvent(msg.action.objectId,msg.action.userId, msg.action.timeStamp);
+                    let e = new SelectShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp, this.color);
                     EventManager.emit(e);
                 } else if (msg.id === "unselectShape") {
-                    let e = new UnselectShapeEvent(msg.action.objectId,msg.action.userId, msg.action.timeStamp);
+                    let e = new UnselectShapeEvent(msg.action.objectId, msg.action.userId, msg.action.timeStamp);
                     EventManager.emit(e);
                 }
             }
@@ -257,7 +255,7 @@ export class Peer {
             } else if (action instanceof UpdateStrokeWidthAction) {
                 e = new StrokeWidthChangedEvent(action.width, action.objectId, action.userId, action.timeStamp);
             } else if (action instanceof SelectShapeAction) {
-                e = new SelectShapeEvent(action.objectId, action.userId, action.timeStamp);
+                e = new SelectShapeEvent(action.objectId, action.userId, action.timeStamp, action.color);
             } else if (action instanceof UnselectShapeAction) {
                 e = new UnselectShapeEvent(action.objectId, action.userId, action.timeStamp);
             }

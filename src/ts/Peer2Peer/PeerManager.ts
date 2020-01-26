@@ -3,10 +3,6 @@ import { Peer } from "./Peer";
 import { SignalingChannel } from "./SignalingChannel";
 import { ActionManager } from "../Actions/ActionManager";
 import { RoomServer } from "./roomServer";
-import { PeerDisplay } from "../View/InfoPanel/PeerDisplay";
-import { EventManager } from "../Events/EventManager";
-import { PeerDisconnectEvent } from "../Events/PeerDisconnectEvent";
-const io = require('socket.io-client');
 
 export class PeerManager {
     // tslint:disable-next-line: typedef

@@ -9,6 +9,7 @@ import { TranslateShapeEvent } from "../../../Events/TranslateShapeEvent";
 import { DeleteShapeEvent } from "../../../Events/DeleteShapeEvent";
 import { SelectShapeEvent } from "../../../Events/SelectShapeEvent";
 import { ActionManager } from "../../../Actions/ActionManager";
+import { UnselectShapeEvent } from "../../../Events/UnselectShapeEvent";
 
 export class SelectTool extends Tool {
     id: string = "select";
@@ -128,14 +129,14 @@ export class SelectTool extends Tool {
 
     selectShape(shape: Shape): void {
         this.selectedShapes.push(shape);
-        shape.select();
+        EventManager.emit(new SelectShapeEvent(shape.id, ActionManager.userId, ActionManager.getTimeStamp(), "#56B4E9"));
     }
 
     unselectShape(shape: Shape): void {
         this.selectedShapes = this.selectedShapes.filter((value) => {
             return value !== shape;
         });
-        shape.unselect();
+        EventManager.emit(new UnselectShapeEvent(shape.id, ActionManager.userId, ActionManager.getTimeStamp()));
     }
 
 

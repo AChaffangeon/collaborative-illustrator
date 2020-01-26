@@ -17,7 +17,7 @@ export class UnselectShapeAction implements Action {
 
     do(canvas: Canvas): void {
       let shape = canvas.getShape(this.objectId);
-      shape.unselectbyId(this.userId);
+      shape.unselect(this.userId);
     }
 
     undo(canvas: Canvas): void {

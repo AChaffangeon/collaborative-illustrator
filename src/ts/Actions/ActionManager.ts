@@ -16,7 +16,7 @@ export interface Action { type: string; userId: ActionID; objectId: string; time
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
-    static userId: string = `User_${Date.now() + Math.random()}`;
+    static userId: string = `User_${Math.floor(Date.now() + Math.random())}`;
     static timeStamp: number = 0;
     static createdShapes: string[] = [];
     static deletedShapes: string[] = [];

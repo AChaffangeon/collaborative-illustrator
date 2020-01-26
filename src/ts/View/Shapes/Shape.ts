@@ -1,12 +1,11 @@
 import { Canvas } from "../Canvas";
-import { Point, Helpers } from "../../helpers";
+import { Point } from "../../helpers";
 import * as d3 from "d3-selection";
-import { Action, ActionManager } from "../../Actions/ActionManager";
+import { ActionManager } from "../../Actions/ActionManager";
 import { EventManager } from "../../Events/EventManager";
 import { SelectShapeEvent } from "../../Events/SelectShapeEvent";
 import { UnselectShapeEvent } from "../../Events/UnselectShapeEvent";
 import { PeerDisplay } from "../InfoPanel/PeerDisplay";
-import { Numeric } from "d3";
 
 
 let shapeNumber = 0;
@@ -19,7 +18,7 @@ export abstract class Shape {
     strokeWidth: number;
     fill: string;
     translate: { dx: number; dy: number; };
-    selectList: string[];
+    numberSelection: number;
 
     constructor() {
         this.id = ActionManager.userId + "-S_" + shapeNumber.toString();
@@ -32,7 +31,7 @@ export abstract class Shape {
         this.translate = { dx: 0, dy: 0 };
 
         this.holderSelection = undefined;
-        this.selectList = [];
+        this.numberSelection = 0;
     }
 
     addToCanvas(canvas: Canvas): void {
@@ -77,54 +76,30 @@ export abstract class Shape {
                pt.y < bbox.y + this.translate.dy + bbox.height;
     }
 
-    select(): void {
-        EventManager.emit(new SelectShapeEvent(this.id, ActionManager.userId, ActionManager.getTimeStamp()));
-        this.holderSelection.classed("selected", true);
-        /*this.holderSelection.select("rect").remove();
+    select(peerId: string, color: string): void {
+        this.numberSelection += 1;
+        let offset = this.numberSelection * 2;
 
         let bbox = this.holderSelection.node().getBBox();
-        this.holderSelection.append("rect")
-            .attr("x", bbox.x - 5)
-            .attr("y", bbox.y - 5)
-            .attr("width", bbox.width + 10)
-            .attr("height", bbox.height + 10)
-            .classed("selection-rect", true);*/
-    }
 
-    selectbYId(peerId: string): void {
-        this.selectList.push(peerId);
-        if(this.holderSelection.classed("selected")) return;
-        let color = PeerDisplay.getColorById(peerId);
-        this.holderSelection.select("rect").remove();
-        let bbox = this.holderSelection.node().getBBox();
         this.holderSelection.append("rect")
+            .attr("id", `peer-selection-${peerId}`)
             .attr("stroke", color)
-            .attr("x", bbox.x - 5)
-            .attr("y", bbox.y - 5)
-            .attr("width", bbox.width + 10)
-            .attr("height", bbox.height + 10)
-            .classed("selection-rect-byId", true);
+            .attr("x", bbox.x - 5 - offset)
+            .attr("y", bbox.y - 5 - offset)
+            .attr("width", bbox.width + 10 + 2 * offset)
+            .attr("height", bbox.height + 10 + 2 * offset)
+            .classed("selection-rect", true);
     }
 
-    unselect(): void {
-        EventManager.emit(new UnselectShapeEvent(this.id, ActionManager.userId, ActionManager.getTimeStamp()));
+    unselect(peerId: string): void {
         if (this.holderSelection) {
-            this.holderSelection.classed("selected", false);
+            let selection = d3.select(`#peer-selection-${peerId}`);
+            if (!selection.empty()) {
+                selection.remove();
+                this.numberSelection -= 1;
+            }
         }
-    }
-
-    unselectbyId(peerId: string): void {
-        this.selectList = this.selectList.filter(obj => obj !== peerId);
-        let color = PeerDisplay.getColorById(this.selectList[this.selectList.length-1]);
-        this.holderSelection.select("rect").remove();
-        let bbox = this.holderSelection.node().getBBox();
-        this.holderSelection.append("rect")
-            .attr("stroke", color)
-            .attr("x", bbox.x - 5)
-            .attr("y", bbox.y - 5)
-            .attr("width", bbox.width + 10)
-            .attr("height", bbox.height + 10)
-            .classed("selection-rect-byId", true);
     }
 
     static isShape(d3Selection: d3.Selection<any, any, any, any>): boolean {

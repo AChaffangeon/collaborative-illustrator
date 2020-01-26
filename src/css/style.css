@@ -134,12 +134,6 @@ body {
 
 .selection-rect {
     fill: none;
-    stroke: #56B4E9;
-    stroke-width: 2px;
-}
-
-.selection-rect-byId {
-    fill: none;
     stroke-width: 2px;
 }
 

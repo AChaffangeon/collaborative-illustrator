@@ -24,7 +24,6 @@ export class FreeFormTool extends Tool {
 
         this.currentPoints = [point];
         this.currentShape = canvas.svgSelection.append("path").classed("in-creation", true);
-        //this.currentShape.style("strokeWidth",canvas.infoPanel.strokePicker.strokeWidth);
 
         this.currentShape.style("fill", canvas.infoPanel.fillPicker.fill)
           .style("stroke-width", `${canvas.infoPanel.strokePicker.strokeWidth}px`)
