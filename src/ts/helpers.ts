@@ -21,6 +21,11 @@ export class Helpers {
         return { x: svgP.x, y: svgP.y };
     }
 
+    /**
+     * Convert a list of points to the d attribute of an svg path.
+     * @param pts List of points to convert.
+     * @returns d attribute. 
+     */
     static pointsToDAttr(pts: Point[]): string {
         let d = `M${pts[0].x}, ${pts[0].y}`;
         for (let i = 1; i < pts.length; i++) {

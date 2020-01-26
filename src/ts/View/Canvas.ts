@@ -3,12 +3,17 @@ import { ToolBar } from "./ToolBar/ToolBar";
 import { Shape } from "./Shapes/Shape";
 import { InfoPanel } from "./InfoPanel/InfoPanel";
 
-/** A class to create a canvas */
+/** A class to create a canvas. */
 export class Canvas {
+    /** Tool bar linked to the canvas. */
     toolBar: ToolBar;
+    /** Info panel linked to the canavs. */
     infoPanel: InfoPanel;
+    /** D3 selection of the div #canvas */
     holderSelection: d3.Selection<any, any, any, any>;
+    /** D3 selection of the svg in the div #canvas */
     svgSelection: d3.Selection<SVGSVGElement, any, any, any>;
+    /** List of shapes in the canvas. */
     shapes: Shape[];
 
     constructor(toolBar: ToolBar, infoPanel: InfoPanel) {
@@ -18,13 +23,12 @@ export class Canvas {
         this.infoPanel = infoPanel;
         this.shapes = [];
 
-        this.setupUI();
         this.setupPointerListeners();
     }
 
-    private setupUI(): void {
-    }
-
+    /**
+     * Setups pointer listeners.
+     */
     private setupPointerListeners(): void {
         let canvasSVG = this.holderSelection.node();
 
@@ -53,8 +57,11 @@ export class Canvas {
         });
     }
 
-
-
+    /**
+     * Gets a shape based on a shape id.
+     * @param shapeId Id of the shape.
+     * @returns shape 
+     */
     getShape(shapeId: string): Shape {
         let shape;
         this.shapes.forEach((s) => {

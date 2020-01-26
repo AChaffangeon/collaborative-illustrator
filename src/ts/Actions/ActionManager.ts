@@ -16,12 +16,19 @@ export interface Action { type: string; userId: ActionID; objectId: string; time
 
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
+    /** Id of the user. */
     static userId: string = `User_${Math.floor(Date.now() + Math.random())}`;
+    /** Current value of the clock. */
     static timeStamp: number = 0;
+    /** List of created shapes. */
     static createdShapes: string[] = [];
+    /** List of deleted shapes. */
     static deletedShapes: string[] = [];
+    /** Canvas where to apply Actions. */
     canvas: Canvas;
+    /** List of done actions. */
     doneActions: Action[];
+    /** List of undone actions. */
     undoneActions: Action[];
     queueActions: Action[];
 
@@ -32,7 +39,6 @@ export class ActionManager {
         this.undoneActions = [];
         this.queueActions = [];
         this.setupEventListeners();
-        this.setupCrtlZListeners();
     }
 
     do(action: Action): void {
@@ -44,9 +50,9 @@ export class ActionManager {
     }
 
     /**
-     * Returns -1 if the action a has a timeStamp below the b action or if it's id is below, if not return 1
-     * @param a first action that will be compared
-     * @param b second action that will be compared
+     * Returns -1 if the action a has a timeStamp below the b action or if it's id is below, if not return 1.
+     * @param a first action that will be compared.
+     * @param b second action that will be compared.
      */
     rankActions(a: Action, b: Action): number {
 
@@ -136,6 +142,9 @@ export class ActionManager {
         ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
      }
 
+    /**
+     * Set the listeners for Action that need to be apply to the canvas.
+     */
     setupEventListeners(): void {
         EventManager.registerHandler("shapeCreated", (e: ShapeCreatedEvent) => {
             this.manageActions(e.action);
@@ -170,25 +179,9 @@ export class ActionManager {
         });
     }
 
-    setupCrtlZListeners(): void {
-        document.addEventListener('keypress', (e) => {
-            if (e.key === "z" && e.ctrlKey) {
-                let action = this.doneActions.pop();
-                if (action) {
-                    action.undo(this.canvas);
-                    this.undoneActions.push(action);
-                }
-            }
-            if (e.key === "Z" && e.ctrlKey && e.shiftKey) {
-                let action = this.undoneActions.pop();
-                if (action) {
-                    action.do(this.canvas);
-                    this.doneActions.push(action);
-                }
-            }
-        });
-    }
-
+    /**
+     * Return the current value of the timestamp
+     */
     static getTimeStamp(): number {
         ActionManager.timeStamp += 1;
         return ActionManager.timeStamp;

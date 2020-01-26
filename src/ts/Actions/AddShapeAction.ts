@@ -2,6 +2,7 @@ import { Action, ActionManager } from "./ActionManager";
 import { Shape } from "../View/Shapes/Shape";
 import { Canvas } from "../View/Canvas";
 
+/** A class to add a shape to a canvas. */
 export class AddShapeAction implements Action {
     type: string;
     objectId: string;

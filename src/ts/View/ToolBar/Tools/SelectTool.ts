@@ -11,11 +11,17 @@ import { SelectShapeEvent } from "../../../Events/SelectShapeEvent";
 import { ActionManager } from "../../../Actions/ActionManager";
 import { UnselectShapeEvent } from "../../../Events/UnselectShapeEvent";
 
+/** A class to add a selection tool. It allows to select and drag a shape. */
 export class SelectTool extends Tool {
+    /** Id of the tool */
     id: string = "select";
+    /** List of selected shapes */
     selectedShapes: Shape[];
+    /** last point where the cursor was. */
     lastPoint: { x: number; y: number; };
+    /** Shape being dragged. */
     shape: Shape;
+    /** If true, a shape was dragged. */
     moved: boolean;
 
     constructor(toolBar: ToolBar, selected: boolean) {
@@ -25,6 +31,11 @@ export class SelectTool extends Tool {
         this.setupUI(toolBar, selected);
     }
 
+    /**
+     * Determines the shape that is selected, if any.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerDown(e: PointerEvent, canvas: Canvas): void {
         super.pointerDown(e, canvas);
         this.moved = false;
@@ -52,6 +63,11 @@ export class SelectTool extends Tool {
         this.lastPoint = point;
     }
 
+    /**
+     * Drags the selected shapes.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerMove(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
@@ -76,6 +92,11 @@ export class SelectTool extends Tool {
         this.lastPoint = point;
     }
 
+    /**
+     * Emits events that a shape was dragged and/or selected.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerUp(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
@@ -128,11 +149,19 @@ export class SelectTool extends Tool {
         super.pointerLeave(e, canvas);
     }
 
-    selectShape(shape: Shape): void {
+    /**
+     * Selects a shape.
+     * @param shape Shape to select.
+     */
+    private selectShape(shape: Shape): void {
         this.selectedShapes.push(shape);
         EventManager.emit(new SelectShapeEvent(shape.id, ActionManager.userId, ActionManager.getTimeStamp(), "#56B4E9"));
     }
 
+    /**
+     * Unselects a shape.
+     * @param shape Shape to unselect.
+     */
     unselectShape(shape: Shape): void {
         this.selectedShapes = this.selectedShapes.filter((value) => {
             return value !== shape;
@@ -140,7 +169,9 @@ export class SelectTool extends Tool {
         EventManager.emit(new UnselectShapeEvent(shape.id, ActionManager.userId, ActionManager.getTimeStamp()));
     }
 
-
+    /**
+     * Unselects all shapes
+     */
     unselectAllShapes(): void {
         let shapeList = this.selectedShapes.slice();
         shapeList.forEach((shape) => {
@@ -159,6 +190,9 @@ export class SelectTool extends Tool {
         }
     }
 
+    /**
+     * To unselect
+     */
     toUnselect(): void {
         this.unselectAllShapes();
     }

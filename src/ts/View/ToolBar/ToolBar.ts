@@ -7,7 +7,9 @@ export type ToolID = string;
 
 /** A class to create a toolbar */
 export class ToolBar {
+    /** Current tool. */
     selectedTool: Tool;
+    /** D3 selection of div #toolbar. */
     holderSelection: d3.Selection<any, any, any, any>;
 
     constructor() {
@@ -21,6 +23,10 @@ export class ToolBar {
         new FreeFormTool(this, false);
     }
 
+    /**
+     * Returns the current tool.
+     * @returns tool 
+     */
     getTool(): Tool {
         return this.selectedTool;
     }

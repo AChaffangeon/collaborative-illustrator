@@ -5,8 +5,11 @@ import { FillChangedEvent } from "../../Events/FillChangedEvent";
 import { ActionManager } from "../../Actions/ActionManager";
 import * as d3 from "d3-selection";
 
+/** A class to create a picker for the fill color. */
 export class FillPicker {
+    /** D3 selection of the picker. */
     holderSelection: d3.Selection<HTMLDivElement, any, any, any>;
+    /** Value of the picker. */
     fill: string;
 
     constructor(infoPanel: InfoPanel) {
@@ -19,6 +22,9 @@ export class FillPicker {
         this.setupInteraction();
     }
 
+    /**
+     * Setups the UI of the picker.
+     */
     private setupUI(): void {
         this.holderSelection
             .append("div")
@@ -45,6 +51,9 @@ export class FillPicker {
                 .style("display", "none");
     }
 
+    /**
+     * Setups the interaction of the picker.
+     */
     private setupInteraction(): void {
         this.holderSelection
             .select("select")
@@ -73,7 +82,11 @@ export class FillPicker {
             });
     }
 
-    updateColor(color: string): void {
+    /**
+     * Updates the fill property.
+     * @param color New value for fill.
+     */
+    private updateColor(color: string): void {
         this.fill = color;
 
         let selectedShapes = Shape.getSelectedShapes();
@@ -82,10 +95,15 @@ export class FillPicker {
         });
     }
 
+    /** Return the value of the picker. */
     getColor(): string {
         return this.fill;
     }
 
+    /**
+     * Sets the value of the value.
+     * @param color New value.
+     */
     setFill(color: string): void {
         this.fill = color;
 

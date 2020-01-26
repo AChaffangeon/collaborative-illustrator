@@ -1,7 +1,7 @@
 import * as d3 from "d3-selection";
-
 import { PeerManager } from "./Peer2Peer/PeerManager";
 
+/** A class to create a login menu. */
 export class LoginMenu {
     constructor(peerManager: PeerManager) {
         this.setupInteractions(peerManager);

@@ -1,7 +1,7 @@
 import { Action, ActionManager } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
-
+/** A class to remove a shape to a canvas. */
 export class DeleteShapeAction implements Action {
     type: string;
     objectId: string;

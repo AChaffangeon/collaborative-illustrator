@@ -1,7 +1,7 @@
 import { Action, ActionManager } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
-import { Shape } from "../View/Shapes/Shape";
 
+/** A class to select a shape in a canvas. */
 export class SelectShapeAction implements Action {
     type: string;
     objectId: string;

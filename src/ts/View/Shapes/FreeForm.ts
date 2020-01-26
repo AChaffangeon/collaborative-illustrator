@@ -2,8 +2,11 @@ import { Shape } from "./Shape";
 import { Canvas } from "../Canvas";
 import { Helpers, Point } from "../../helpers";
 
+/** A class to create a new free form shape. */
 export class FreeForm extends Shape {
+    /** List of point in the shape. */
     path: Point[];
+    /** D3 selection of the svg path representing this shape. */
     pathSelection: d3.Selection<SVGPathElement, Point[], any, any>;  
 
     constructor() {
@@ -15,22 +18,37 @@ export class FreeForm extends Shape {
         this.strokeWidth = 2;
     }
 
+    /**
+     * Adds a point to the shape.
+     * @param pt The point to add.
+     */
     addPoint(pt: Point): void {
         this.path.push(pt);
         this.repaint();
     }
 
-    addPoints(points: Point[]): void {
+    /**
+     * Set the list of points of the shape. 
+     * @param points List of points.
+     */
+    setPoints(points: Point[]): void {
         this.path = points;
         this.repaint();
     }
 
+    /**
+     * Adds the shape to a canvas.
+     * @param canvas The canvas where to add the shape.
+     */
     addToCanvas(canvas: Canvas): void {
         super.addToCanvas(canvas);
         this.pathSelection = this.shapeSelection.append("path");
         this.repaint();
     }
 
+    /**
+     * Repaints the free form
+     */
     repaint(): void {
         super.repaint();
         if (this.shapeSelection === undefined) {
@@ -47,11 +65,10 @@ export class FreeForm extends Shape {
             .style("stroke-width", `${this.strokeWidth}px`);
     }
 
-    copy(shape: any): void {
-        super.copy(shape);
-        this.path = shape.path;
-    }
-
+    /**
+     * Export the shape to json
+     * @returns json 
+     */
     toJSON(): any {
         let json = super.toJSON();
         json["path"] = this.path;

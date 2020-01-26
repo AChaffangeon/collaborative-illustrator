@@ -7,9 +7,13 @@ import { EventManager } from "../../../Events/EventManager";
 import { ShapeCreatedEvent } from "../../../Events/ShapeCreatedEvent";
 import { ActionManager } from "../../../Actions/ActionManager";
 
+/** A class to add a free form tool. It allows to draw free form shape. */
 export class FreeFormTool extends Tool {
+    /** Id of the tool. */
     id: string = "freeform";
+    /** Shape being drawn. */
     currentShape: d3.Selection<SVGGElement, any, any, any>;
+    /** List of points that define the current shape. */
     currentPoints: Point[];
 
     constructor(toolBar: ToolBar, selected: boolean) {
@@ -17,6 +21,11 @@ export class FreeFormTool extends Tool {
         this.setupUI(toolBar, selected);
     }
 
+    /**
+     * Instanciates the current shape.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerDown(e: PointerEvent, canvas: Canvas): void {
         super.pointerDown(e, canvas);
         let point = { x: e.pageX, y: e.pageY };
@@ -28,10 +37,13 @@ export class FreeFormTool extends Tool {
         this.currentShape.style("fill", canvas.infoPanel.fillPicker.fill)
           .style("stroke-width", `${canvas.infoPanel.strokePicker.strokeWidth}px`)
           .style("stroke", canvas.infoPanel.strokePicker.stroke);
-
-
      }
 
+    /**
+     * Add points to the current shape.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerMove(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
@@ -44,6 +56,11 @@ export class FreeFormTool extends Tool {
         this.currentShape.attr("d", Helpers.pointsToDAttr(this.currentPoints));
     }
 
+    /**
+     * Emit an event to signal the creation of a new shape.
+     * @param e Pointer Event that triggered this function.
+     * @param canvas Canvas where the event was triggered.
+     */
     pointerUp(e: PointerEvent, canvas: Canvas): void {
         if (!this.isDown) {
             return;
@@ -56,7 +73,7 @@ export class FreeFormTool extends Tool {
         shape.setStroke(canvas.infoPanel.strokePicker.stroke);
         shape.setStrokeWidth(canvas.infoPanel.strokePicker.strokeWidth);
         shape.setFill(canvas.infoPanel.fillPicker.fill);
-        shape.addPoints(this.currentPoints);
+        shape.setPoints(this.currentPoints);
 
         EventManager.emit(new ShapeCreatedEvent(shape, ActionManager.userId, ActionManager.getTimeStamp()));
 

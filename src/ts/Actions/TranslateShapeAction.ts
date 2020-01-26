@@ -1,7 +1,7 @@
 import { Action, ActionManager } from "./ActionManager";
-import { Shape } from "../View/Shapes/Shape";
 import { Canvas } from "../View/Canvas";
 
+/** A class to move a shape in a canvas. */
 export class TranslateShapeAction implements Action {
     type: string;
     objectId: string;

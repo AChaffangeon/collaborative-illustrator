@@ -1,8 +1,11 @@
 import { ToolBar, ToolID } from "../ToolBar";
 import { Canvas } from "../../Canvas";
 
+/** An abstract class to create a tool. */
 export abstract class Tool {
+    /** Id of the tool. */
     id: ToolID = "unknown";
+    /** Is the pointer down. */
     isDown: boolean;
 
     constructor() {

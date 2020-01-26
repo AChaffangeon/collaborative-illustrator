@@ -1,6 +1,7 @@
 import { ActionEvent } from "./EventManager";
 import { UpdateStrokeAction } from "../Actions/UpdateStrokeAction";
 
+/** A class to signal that the stroke property of a shape has been changed. */
 export class StrokeChangedEvent implements ActionEvent{
     id: string = "strokeChanged";
     action: UpdateStrokeAction;

@@ -1,6 +1,7 @@
-import { ActionManager, Action } from "./ActionManager";
+import { Action } from "./ActionManager";
 import { Canvas } from "../View/Canvas";
 
+/** A class to change the fill property of a shape in a canvas. */
 export class UpdateFillAction implements Action {
     type: string;
     objectId: string;
