@@ -72,9 +72,11 @@ module.exports = function (grunt) {
     function () {
       shell.mkdir("-p", "build/img");
       shell.mkdir("-p", "build/css");
+      shell.mkdir("-p", "build/favicon");
       shell.cp("-f", "./src/*.html", "build/");
       shell.cp("-f", "./src/css/*.css", "build/css/");
       shell.cp("-f", "./src/img/*", "build/img/");
+      shell.cp("-f", "./src/favicon/*", "build/favicon");
     }
   );
 
