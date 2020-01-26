@@ -2,7 +2,8 @@
 
 The Collaborative Illustrator is a simplified illustrator allowing collaboration between peers with WebRTC.
 
-▶️ [**Collaborative Illustrator web application**](https://https://achaffangeon.github.io/collaborative-illustrator/)
+▶️ [**Collaborative Illustrator web application**](https://achaffangeon.github.io/collaborative-illustrator/)
+📖 [**Collaborative Illustrator Documentation**](https://achaffangeon.github.io/collaborative-illustrator/docs/)
 
 ## Building process
 The Collaborative Illustrator is written in [TypeScript](https://www.TypeScriptlang.org/), a language that can be compile to JavaScript. It uses [D3](https://d3js.org/) for manipulating the DOM and [Browserify](http://browserify.org/) to pack all the output JavaScript files into a single script.
@@ -17,3 +18,5 @@ Once this is done, **open a terminal and run the following commands**:
 4. `grunt` to finally build the application.
 
 The `build` folder will contain your own build.
+
+To create your own documentation, use `grunt make-doc` at the root of the project.
