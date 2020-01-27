@@ -9,5 +9,6 @@ export class PeerConnectEvent implements Event {
     constructor(userId: string, color: string) {
         this.userId = userId;
         this.color = color;
+        //console.log(userId);
     }
 }

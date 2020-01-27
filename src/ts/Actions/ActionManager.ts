@@ -24,13 +24,17 @@ export class ActionManager {
     static createdShapes: string[] = [];
     /** List of deleted shapes. */
     static deletedShapes: string[] = [];
+    /** associate each peer connected to the last timestamp he sended */
+    static lastPeerTimeStamps: [string, number][] = [];
     /** Canvas where to apply Actions. */
     canvas: Canvas;
     /** List of done actions. */
     doneActions: Action[];
     /** List of undone actions. */
     undoneActions: Action[];
+    /** List of actions, applied to a shape that doesn't allready exist. */
     queueActions: Action[];
+
 
     constructor(canvas: Canvas) {
 
@@ -140,8 +144,23 @@ export class ActionManager {
      */
     update(action: Action): void {
         ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
+
+        for (let peerInfo of ActionManager.lastPeerTimeStamps) {
+          console.log(peerInfo);
+          if (peerInfo[0] === action.userId) {
+            peerInfo[1] = action.timeStamp;
+          }
+        }
+        //console.log(ActionManager.lastPeerTimeStamps);
      }
 
+     /**
+       * add a new peer to the list of the peer time stamps, his time stamp is set to 0
+      * @param peerId the id of the new connected peer
+      */
+     static addNewPeer(peerId: string): void {
+       ActionManager.lastPeerTimeStamps.push([peerId, 0]);
+     }
     /**
      * Set the listeners for Action that need to be apply to the canvas.
      */

@@ -24,8 +24,6 @@ export class PeerDisplay {
         this.addMainPeer();
     }
 
-
-
     /**
      * Add in the list, a circle corresponding to the user.
      */
@@ -52,7 +50,7 @@ export class PeerDisplay {
                 .style("border-color", color);
     }
     /**
-     * Remove in the list, a circle corresponding to a disconected peer. 
+     * Remove in the list, a circle corresponding to a disconected peer.
      * @param id Id of the peer to remove.
      */
     removePeer(id: string): void {

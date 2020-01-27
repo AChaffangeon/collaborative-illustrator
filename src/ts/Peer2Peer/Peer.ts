@@ -58,7 +58,6 @@ export class Peer {
         this.peerId = signalingChannel.signalingChannel;
         this.setupColor();
         this.config();
-
     }
 
     /**
@@ -163,14 +162,14 @@ export class Peer {
     }
 
     /**
-     * Setup the data channel to use for communication between the peers. 
+     * Setup the data channel to use for communication between the peers.
      */
     setupDataChannel(): void {
         this.dataChannel.onopen = (event) => {
             this.onDataChannelOpen();
         };
 
-        
+
         this.dataChannel.onmessage = (event) => {
             this.onPeerMsg(event);
         };
