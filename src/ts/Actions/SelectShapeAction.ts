@@ -6,7 +6,7 @@ export class SelectShapeAction implements Action {
     type: string;
     objectId: string;
     userId: string;
-    timeStamp: number = ActionManager.getTimeStamp();
+    timeStamp: number;
     color: string;
 
     constructor(shapeId: string, userId: string, timeStamp: number, color: string) {
