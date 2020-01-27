@@ -6,7 +6,7 @@ export class TranslateShapeAction implements Action {
     type: string;
     objectId: string;
     userId: string;
-    timeStamp: number = ActionManager.getTimeStamp();
+    timeStamp: number;
     translate: { dx: number, dy: number };
     oldTranslate: { dx: number, dy: number };
 

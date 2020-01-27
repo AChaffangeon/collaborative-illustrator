@@ -22,11 +22,11 @@ export class PeerManager {
     private setupServerListeners(actionManager: ActionManager): void {
         this.roomServer.register("newPeer", (data) => {
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer(sc, actionManager);
+            new Peer(sc, actionManager, data.userId);
         });
         this.roomServer.register("connectToPeer", (data) => {
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer( sc, actionManager, true);
+            new Peer(sc, actionManager, data.userId, true);
 
         });
     }
@@ -41,6 +41,7 @@ export class PeerManager {
             if (data.status === 404) {
                 alert("Room id not correct");
             } else if (data.status === 200) {
+                ActionManager.userId = data.userId;
                 this.displayRoomId(roomId);
             }
         });
@@ -52,6 +53,7 @@ export class PeerManager {
     newRoom(): void {
         this.roomServer.emit("newRoom", { });
         this.roomServer.register("roomCreated", (data) => {
+            ActionManager.userId = data.userId;
             this.displayRoomId(data.roomId);
         });
     }

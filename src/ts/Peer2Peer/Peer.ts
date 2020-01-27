@@ -50,12 +50,12 @@ export class Peer {
     /** Id of the peer */
     peerId: string;
 
-    constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, isOfferer: boolean = false) {
+    constructor(signalingChannel: SignalingChannel, actionManager: ActionManager, peerId: string, isOfferer: boolean = false) {
         this.connection = new RTCPeerConnection(configuration);
         this.signalingChannel = signalingChannel;
         this.isOfferer = isOfferer;
         this.actionManager = actionManager;
-        this.peerId = signalingChannel.signalingChannel;
+        this.peerId = peerId;
         this.setupColor();
         this.config();
     }
@@ -89,7 +89,7 @@ export class Peer {
                     this.setLocalDescription(offer);
                 })
                 .catch((e) => {
-                    console.log(`Error negotiations with: ${this.signalingChannel.signalingChannel}`, e);
+                    console.log(`Error negotiations with: ${this.peerId}`, e);
                 });
             };
 

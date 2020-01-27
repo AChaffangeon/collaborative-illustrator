@@ -6,7 +6,7 @@ export class UnselectShapeAction implements Action {
     type: string;
     objectId: string;
     userId: string;
-    timeStamp: number = ActionManager.getTimeStamp();
+    timeStamp: number;
 
     constructor(shapeId: string, userId: string, timeStamp: number) {
         this.type = "unselectShape";
