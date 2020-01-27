@@ -2,11 +2,13 @@ const server = require('http').createServer();
 const { Server } = require('ws');
 
 const wss = new Server({ server });
+const PORT = process.env.PORT || 3000;
 
 let rooms = {}
-roomsNb = 0;
+let roomsNb = 0;
 let signalingChannels = {}
-signalingChannelsNb = 0;
+let signalingChannelsNb = 0;
+let userNb = 0;
 
 wss.on('connection', (client) => {
     client.on('message', (message) => {
@@ -26,40 +28,46 @@ wss.on('connection', (client) => {
 function newRoom(client) {
     roomsNb += 1;
     let room = `room-${roomsNb}`;
-    rooms[room] = [client];
+    userNb += 1;
+    let userId = `U_${userNb}`;
+
+    rooms[room] = [{id: userId, client: client}];
     sendToClient(client, 
         "roomCreated", 
-        {roomId: room});
+        {roomId: room, userId: userId});
 
     client.on('close', () => {
-        rooms[room] = rooms[room].filter((val, i, a) => { return val !== client });
+        rooms[room] = rooms[room].filter((val, i, a) => { return val.id !== userId });
     });
 }
 
 function joinRoom(msg, client) {
     let room = msg.roomId;
+    userNb += 1;
+    let userId = `U_${userNb}`;
 
     if(!rooms.hasOwnProperty(room)){
         sendToClient(client, "roomJoined", {status: 404});
         return;
     }
 
-    rooms[room].forEach((c) => {
+    rooms[room].forEach((user) => {
         signalingChannelsNb += 1;
         let signalingChannel = `sc-${signalingChannelsNb}`;
-        signalingChannels[signalingChannel] = [c, client];
-
-        sendToClient(c, 
+        signalingChannels[signalingChannel] = [user.client, client];
+        sendToClient(user.client, 
             "newPeer", 
-            {signalingChannel: signalingChannel});
+            {signalingChannel: signalingChannel, userId: userId});
         sendToClient(client, 
             "connectToPeer", 
-            {signalingChannel: signalingChannel});
+            {signalingChannel: signalingChannel, userId: user.id});
     })
-    rooms[room].push(client);
-    sendToClient(client, "roomJoined", {status: 200});
+
+    rooms[room].push({id: userId, client: client});
+    sendToClient(client, "roomJoined", { status: 200, userId: userId });
+
     client.on('close', () => {
-        rooms[room] = rooms[room].filter((val, i, a) => { return val !== client });
+        rooms[room] = rooms[room].filter((val, i, a) => { return val.id !== userId });
     });
 }
 
@@ -87,4 +95,4 @@ function sendToClient(client, id, msg) {
     client.send(JSON.stringify({id: id, data: msg}));
 }
 
-server.listen(3000);
+server.listen(PORT);

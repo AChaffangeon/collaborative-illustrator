@@ -17,7 +17,7 @@ export interface Action { type: string; userId: ActionID; objectId: string; time
 /** A class to manage and apply actions on a Canvas. */
 export class ActionManager {
     /** Id of the user. */
-    static userId: string = `User_${Math.floor(Date.now() + Math.random())}`;
+    static userId: string = "";
     /** Current value of the clock. */
     static timeStamp: number = 0;
     /** List of created shapes. */
@@ -76,6 +76,7 @@ export class ActionManager {
      */
 
     manageActions(action: Action): void {
+        console.log(action);
         if (ActionManager.deletedShapes.includes(action.objectId)) {
             return;
         } else if (!ActionManager.createdShapes.includes(action.objectId)) {
