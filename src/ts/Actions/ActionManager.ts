@@ -80,7 +80,7 @@ export class ActionManager {
      */
 
     manageActions(action: Action): void {
-        console.log(action);
+
         if (ActionManager.deletedShapes.includes(action.objectId)) {
             return;
         } else if (!ActionManager.createdShapes.includes(action.objectId)) {
@@ -140,19 +140,24 @@ export class ActionManager {
     }
 
     /**
-      * set the time stamp to the max between the current time stamp and the last time stamp received from a peer
+     * set the time stamp to the max between the current time stamp and the last time stamp received from a peer
+     * delete all the previous actions which have a time stamp as it can't receive a message concurrent to it anymore. 
      * @param action the new action that just has been executed
      */
     update(action: Action): void {
         ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
-
+        let minTS = ActionManager.timeStamp;
         for (let peerInfo of ActionManager.lastPeerTimeStamps) {
-          console.log(peerInfo);
           if (peerInfo[0] === action.userId) {
             peerInfo[1] = action.timeStamp;
           }
+          minTS = Math.min(minTS, peerInfo[1]);
         }
-        //console.log(ActionManager.lastPeerTimeStamps);
+        for (let a of this.doneActions) {
+          if (a.timeStamp <= minTS) {
+            this.doneActions = this.doneActions.filter( (el) => el !== a);
+          }
+        }
      }
 
      /**
@@ -161,6 +166,14 @@ export class ActionManager {
       */
      static addNewPeer(peerId: string): void {
        ActionManager.lastPeerTimeStamps.push([peerId, 0]);
+     }
+
+     /**
+       * add a new peer to the list of the peer time stamps, his time stamp is set to 0
+      * @param peerId the id of the new connected peer
+      */
+     static removePeer(peerId: string): void {
+       ActionManager.lastPeerTimeStamps = ActionManager.lastPeerTimeStamps.filter((el) => el[0] !== peerId) ;
      }
     /**
      * Set the listeners for Action that need to be apply to the canvas.
