@@ -21,7 +21,6 @@ export class PeerDisplay {
 
         this.setupUI();
         this.setupEventHandlers();
-        this.addMainPeer();
     }
 
     /**
@@ -31,9 +30,10 @@ export class PeerDisplay {
       this.holderSelection
         .select(".body")
             .append("div")
-                .attr("id", ActionManager.userId)
+                .attr("id", `my-circle${ActionManager.userId}`)
                 .classed("main-circle", true)
-                .style("border-color", "#56B4E9");
+                .style("border-color", "#56B4E9")
+                .text(ActionManager.userId);
     }
 
     /**
@@ -47,7 +47,8 @@ export class PeerDisplay {
             .append("div")
                 .attr("id", `peer-circle-${id}`)
                 .classed("peer-circle", true)
-                .style("border-color", color);
+                .style("border-color", color)
+                .text(id);
     }
     /**
      * Remove in the list, a circle corresponding to a disconected peer.

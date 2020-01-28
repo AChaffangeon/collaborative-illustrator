@@ -1,32 +1,32 @@
 import * as d3 from "d3-selection";
 import { Peer } from "./Peer";
 import { SignalingChannel } from "./SignalingChannel";
-import { ActionManager } from "../Actions/ActionManager";
+import { ActionManager, Action } from "../Actions/ActionManager";
 import { RoomServer } from "./roomServer";
 
 /** A class to manage multiple peers. */
 export class PeerManager {
-    // tslint:disable-next-line: typedef
     /** Room server to get notification of new user from. */
     roomServer: RoomServer;
+    actionManager: ActionManager;
 
     constructor(actionManager: ActionManager) {
         this.roomServer = new RoomServer();
-        this.setupServerListeners(actionManager);
+        this.actionManager = actionManager;
+        this.setupServerListeners();
     }
 
     /**
      * Setups room server listeners.
-     * @param actionManager Action Manage to pass to new peer.
      */
-    private setupServerListeners(actionManager: ActionManager): void {
+    private setupServerListeners(): void {
         this.roomServer.register("newPeer", (data) => {
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer(sc, actionManager, data.userId);
+            new Peer(sc, this.actionManager, data.userId);
         });
         this.roomServer.register("connectToPeer", (data) => {
             let sc = new SignalingChannel(this.roomServer, data.signalingChannel);
-            new Peer(sc, actionManager, data.userId, true);
+            new Peer(sc, this.actionManager, data.userId, true);
 
         });
     }
@@ -42,6 +42,7 @@ export class PeerManager {
                 alert("Room id not correct");
             } else if (data.status === 200) {
                 ActionManager.userId = data.userId;
+                this.actionManager.canvas.infoPanel.peerList.addMainPeer();
                 this.displayRoomId(roomId);
             }
         });
@@ -54,6 +55,7 @@ export class PeerManager {
         this.roomServer.emit("newRoom", { });
         this.roomServer.register("roomCreated", (data) => {
             ActionManager.userId = data.userId;
+            this.actionManager.canvas.infoPanel.peerList.addMainPeer();
             this.displayRoomId(data.roomId);
         });
     }

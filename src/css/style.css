@@ -299,6 +299,10 @@ peer-list
     border-style: solid;
     background: white;
     margin-left: 5px;
+
+    text-align: center;
+    color: #555555;
+    line-height: 30px;
 }
 
 .main-circle {
@@ -309,4 +313,7 @@ peer-list
     border-style: solid;
     background: #555555;
 
+    text-align: center;
+    line-height: 30px;
+    color: white;
 }
