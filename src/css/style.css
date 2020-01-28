@@ -288,6 +288,7 @@ peer-list
 #peer-list .body {
     display: flex;
     margin: 2px;
+    flex-wrap: wrap;
 }
 
 .peer-circle {
@@ -299,21 +300,15 @@ peer-list
     border-style: solid;
     background: white;
     margin-left: 5px;
+    margin-bottom: 5px;
 
     text-align: center;
-    color: #555555;
     line-height: 30px;
+    color: #555555;
+    font-size: 13px;
 }
 
-.main-circle {
-    width: 30px;
-    height: 30px;
-
-    border-radius: 50%;
-    border-style: solid;
+.peer-circle.main-circle {
     background: #555555;
-
-    text-align: center;
-    line-height: 30px;
     color: white;
 }

@@ -31,6 +31,7 @@ export class PeerDisplay {
         .select(".body")
             .append("div")
                 .attr("id", `my-circle${ActionManager.userId}`)
+                .classed("peer-circle", true)
                 .classed("main-circle", true)
                 .style("border-color", "#56B4E9")
                 .text(ActionManager.userId);
