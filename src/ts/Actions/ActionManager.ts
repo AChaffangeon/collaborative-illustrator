@@ -146,7 +146,7 @@ export class ActionManager {
      */
     update(action: Action): void {
         ActionManager.timeStamp = Math.max(ActionManager.timeStamp, action.timeStamp);
-        let minTS = ActionManager.timeStamp;
+        /*let minTS = ActionManager.timeStamp;
         for (let peerInfo of ActionManager.lastPeerTimeStamps) {
           if (peerInfo[0] === action.userId) {
             peerInfo[1] = action.timeStamp;
@@ -157,7 +157,7 @@ export class ActionManager {
           if (a.timeStamp <= minTS) {
             this.doneActions = this.doneActions.filter( (el) => el !== a);
           }
-        }
+        }*/
      }
 
      /**

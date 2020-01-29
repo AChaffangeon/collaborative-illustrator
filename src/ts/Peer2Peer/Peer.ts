@@ -182,9 +182,7 @@ export class Peer {
         console.log(`Datachannel is open with: ${this.peerId}`);
         this.signalingChannel.close();
         this.setupEventHandler();
-        if (!this.isOfferer) {
-            this.sendCurrentState();
-        }
+        this.sendCurrentState();
         EventManager.emit(new PeerConnectEvent(this.peerId, this.color));
     }
 
@@ -305,6 +303,7 @@ export class Peer {
      */
     private sendCurrentState(): void {
         let actions = this.actionManager.doneActions;
+        console.log(actions);
         actions.forEach((action) => {
             let e: Event;
             if (action instanceof AddShapeAction) {
