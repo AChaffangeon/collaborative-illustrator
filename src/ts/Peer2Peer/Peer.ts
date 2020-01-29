@@ -237,9 +237,8 @@ export class Peer {
      * @param msg Message to send.
      */
     private send(msg: string): void {
-      setTimeout(() => {
-          this.dataChannel.send(msg);
-      }, 8000);
+        console.log("[SENT]", msg);
+      this.dataChannel.send(msg);
     }
 
     /**
