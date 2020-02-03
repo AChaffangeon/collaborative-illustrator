@@ -6,6 +6,8 @@ The Collaborative Illustrator is a simplified illustrator allowing collaboration
 
 📖 [**Collaborative Illustrator Documentation**](https://achaffangeon.github.io/collaborative-illustrator/docs/)
 
+[![](https://github.com/AChaffangeon/collaborative-illustrator/blob/master/screenshots/groupware.png)](https://github.com/AChaffangeon/collaborative-illustrator/blob/master/screenshots/groupware.png)
+
 ## Building process
 The Collaborative Illustrator is written in [TypeScript](https://www.TypeScriptlang.org/), a language that can be compile to JavaScript. It uses [D3](https://d3js.org/) for manipulating the DOM and [Browserify](http://browserify.org/) to pack all the output JavaScript files into a single script.
 
