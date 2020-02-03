@@ -1,0 +1,1 @@
+{"version":3,"file":"PeerConnectEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/PeerConnectEvent.ts"],"names":[],"mappings":";;AACA,4DAAyD;AAIzD,MAAa,gBAAgB;IAKzB,YAAY,MAAc,EAAE,KAAa;QAJzC,OAAE,GAAW,aAAa,CAAC;QAKvB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,6BAAa,CAAC,UAAU,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC;IAC1C,CAAC;CACJ;AAVD,4CAUC"}

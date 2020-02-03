@@ -1,0 +1,1 @@
+{"version":3,"file":"UnselectShapeEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/UnselectShapeEvent.ts"],"names":[],"mappings":";;AACA,wEAAqE;AAGrE,MAAa,kBAAkB;IAI3B,YAAY,OAAe,EAAE,MAAc,EAAE,SAAiB;QAH9D,OAAE,GAAW,eAAe,CAAC;QAIzB,IAAI,CAAC,MAAM,GAAG,IAAI,yCAAmB,CAAC,OAAO,EAAE,MAAM,EAAE,SAAS,CAAC,CAAC;IAEtE,CAAC;CACJ;AARD,gDAQC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"PeerDisconnectEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/PeerDisconnectEvent.ts"],"names":[],"mappings":";;AACA,4DAAyD;AAGzD,MAAa,mBAAmB;IAI5B,YAAY,MAAc;QAH1B,OAAE,GAAW,gBAAgB,CAAC;QAI1B,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,6BAAa,CAAC,UAAU,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC;IAC1C,CAAC;CACJ;AARD,kDAQC"}

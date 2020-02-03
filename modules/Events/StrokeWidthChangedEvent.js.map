@@ -1,0 +1,1 @@
+{"version":3,"file":"StrokeWidthChangedEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/StrokeWidthChangedEvent.ts"],"names":[],"mappings":";;AACA,gFAA6E;AAG7E,MAAa,uBAAuB;IAIhC,YAAY,KAAa,EAAE,OAAe,EAAE,MAAc,EAAE,SAAiB;QAH7E,OAAE,GAAW,oBAAoB,CAAC;QAI9B,IAAI,CAAC,MAAM,GAAG,IAAI,iDAAuB,CAAC,KAAK,EAAE,OAAO,EAAE,MAAM,EAAE,SAAS,CAAC,CAAC;IACjF,CAAC;CACJ;AAPD,0DAOC"}

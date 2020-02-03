@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteShapeEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/DeleteShapeEvent.ts"],"names":[],"mappings":";;AACA,oEAAiE;AAGjE,MAAa,gBAAgB;IAIzB,YAAa,OAAe,EAAE,MAAc,EAAE,SAAiB;QAH/D,OAAE,GAAW,cAAc,CAAC;QAIxB,IAAI,CAAC,MAAM,GAAG,IAAI,qCAAiB,CAAC,OAAO,EAAE,MAAM,EAAE,SAAS,CAAC,CAAC;IACpE,CAAC;CACJ;AAPD,4CAOC"}

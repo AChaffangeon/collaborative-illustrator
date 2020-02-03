@@ -1,0 +1,1 @@
+{"version":3,"file":"StrokeChangedEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/StrokeChangedEvent.ts"],"names":[],"mappings":";;AACA,sEAAmE;AAGnE,MAAa,kBAAkB;IAI3B,YAAY,KAAa,EAAE,OAAe,EAAE,MAAc,EAAE,SAAiB;QAH7E,OAAE,GAAW,eAAe,CAAC;QAIzB,IAAI,CAAC,MAAM,GAAG,IAAI,uCAAkB,CAAC,KAAK,EAAE,OAAO,EAAE,MAAM,EAAE,SAAS,CAAC,CAAC;IAC5E,CAAC;CACJ;AAPD,gDAOC"}

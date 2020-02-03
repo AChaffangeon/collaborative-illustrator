@@ -1,0 +1,1 @@
+{"version":3,"file":"SelectShapeEvent.js","sourceRoot":"","sources":["../../../src/ts/Events/SelectShapeEvent.ts"],"names":[],"mappings":";;AACA,oEAAiE;AAGjE,MAAa,gBAAgB;IAIzB,YAAY,OAAe,EAAE,MAAc,EAAE,SAAiB,EAAE,KAAa;QAH7E,OAAE,GAAW,aAAa,CAAC;QAIvB,IAAI,CAAC,MAAM,GAAG,IAAI,qCAAiB,CAAC,OAAO,EAAE,MAAM,EAAE,SAAS,EAAE,KAAK,CAAC,CAAC;IAC3E,CAAC;CACJ;AAPD,4CAOC"}
